@@ -11,11 +11,19 @@ namespace GobpherLib
                 return;
             }
 
-
+            // First character of any response is the document type
             if (Enum.IsDefined(typeof(ResponseType), (int)data[0]))
             {
                 Type = (ResponseType)data[0];
             }
+
+            var message = data[1..^0];
+            if (string.IsNullOrWhiteSpace(message))
+            {
+                return;
+            }
+
+            Display = message;
         }
 
         public ResponseType Type { get; private set; } = ResponseType.Unknown;

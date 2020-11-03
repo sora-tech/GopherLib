@@ -41,5 +41,16 @@ namespace GopherLib.Test.ResponseTests
             Assert.IsEmpty(response.Domain);
             Assert.AreEqual(70, response.Port);
         }
+
+        [Test]
+        public void Constructor_TypeDisplay_SplitsDisplay()
+        {
+            const string data = "0Test Display";
+
+            var response = new Response(data);
+
+            Assert.AreEqual(ResponseType.File, response.Type);
+            Assert.AreEqual("Test Display", response.Display);
+        }
     }
 }
