@@ -16,3 +16,5 @@ ITEF have published several RFCs covering Gopher which provide the baseline spec
 * [Gopher+ Wikipedia Article](https://en.wikipedia.org/wiki/Gopher%2B)
 
 Gopher support has been dropped by all major browsers so for testing [Gopher Browser for Windows](http://www.jaruzel.com/gopher/gopher-client-browser-for-windows) is used.
+
+[SDF.org](https://sdf.org) provide free Gopher hosting and are used as a remote server for validation.
