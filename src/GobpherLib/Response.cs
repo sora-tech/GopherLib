@@ -1,9 +1,21 @@
-﻿namespace GobpherLib
+﻿using System;
+
+namespace GobpherLib
 {
     public class Response
     {
         public Response(string data)
         {
+            if (string.IsNullOrWhiteSpace(data))
+            {
+                return;
+            }
+
+
+            if (Enum.IsDefined(typeof(ResponseType), (int)data[0]))
+            {
+                Type = (ResponseType)data[0];
+            }
         }
 
         public ResponseType Type { get; private set; } = ResponseType.Unknown;
