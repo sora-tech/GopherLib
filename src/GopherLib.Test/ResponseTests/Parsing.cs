@@ -53,13 +53,22 @@ namespace GopherLib.Test.ResponseTests
         }
 
         [Test]
+        public void Constructor_FourTabs_Accepted()
+        {
+            const string data = "0\t\t\t\t";
+
+            var response = new Response(data);
+
+            Assert.AreEqual(ResponseType.File, response.Type);
+        }
+
+        [Test]
         public void Constructor_TypeDisplay_SplitsDisplay()
         {
             const string data = "0Test Display\t\t\t";
 
             var response = new Response(data);
 
-            Assert.AreEqual(ResponseType.File, response.Type);
             Assert.AreEqual("Test Display", response.Display);
         }
 
@@ -70,9 +79,38 @@ namespace GopherLib.Test.ResponseTests
 
             var response = new Response(data);
 
-            Assert.AreEqual(ResponseType.File, response.Type);
-            Assert.AreEqual("Test Display", response.Display);
             Assert.AreEqual("Selector Text", response.Selector);
+        }
+
+        [Test]
+        public void Constructor_Domain_SplitsDomain()
+        {
+            const string data = "0Test Display\tSelector Text\tDomain Info\t";
+
+            var response = new Response(data);
+
+            Assert.AreEqual("Domain Info", response.Domain);
+        }
+
+        [Test]
+        public void Constructor_Port_SplitsPort()
+        {
+            const string data = "0Test Display\tSelector Text\tDomain Info\t71";
+
+            var response = new Response(data);
+
+            Assert.AreEqual(71, response.Port);
+        }
+
+
+        [Test]
+        public void Constructor_InvalidPort_KeepsDefault()
+        {
+            const string data = "0Test Display\tSelector Text\tDomain Info\tAB";
+
+            var response = new Response(data);
+
+            Assert.AreEqual(70, response.Port);
         }
     }
 }

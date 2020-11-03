@@ -19,7 +19,7 @@ namespace GobpherLib
 
             // Respones are tab delimited and must contain 4 section
             var split = data[1..^0].Split('\t');
-            if(split.Length != 4)
+            if(split.Length < 4)
             {
                 Type = ResponseType.Unknown;
                 return;
@@ -27,6 +27,12 @@ namespace GobpherLib
 
             Display = split[0];
             Selector = split[1];
+            Domain = split[2];
+
+            if (int.TryParse(split[3], out var port))
+            {
+                Port = port;
+            }
         }
 
         public ResponseType Type { get; private set; } = ResponseType.Unknown;
