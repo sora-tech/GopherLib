@@ -10,6 +10,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RFC", "RFC", "{998E445C-2615-49D1-A11E-B111F2E44017}"
+	ProjectSection(SolutionItems) = preProject
+		..\rfc\rfc1436.txt = ..\rfc\rfc1436.txt
+		..\rfc\rfc1738.txt = ..\rfc\rfc1738.txt
+		..\rfc\rfc3986.txt = ..\rfc\rfc3986.txt
+		..\rfc\rfc4266.txt = ..\rfc\rfc4266.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +31,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{998E445C-2615-49D1-A11E-B111F2E44017} = {CD9A8100-3CDD-4DED-9209-E720A09B6319}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4D0ED218-04B5-4D29-B239-228D9A176862}
