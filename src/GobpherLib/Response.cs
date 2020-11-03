@@ -17,13 +17,16 @@ namespace GobpherLib
                 Type = (ResponseType)data[0];
             }
 
-            var message = data[1..^0];
-            if (string.IsNullOrWhiteSpace(message))
+            // Respones are tab delimited and must contain 4 section
+            var split = data[1..^0].Split('\t');
+            if(split.Length != 4)
             {
+                Type = ResponseType.Unknown;
                 return;
             }
 
-            Display = message;
+            Display = split[0];
+            Selector = split[1];
         }
 
         public ResponseType Type { get; private set; } = ResponseType.Unknown;

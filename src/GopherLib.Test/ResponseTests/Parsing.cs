@@ -9,19 +9,9 @@ namespace GopherLib.Test.ResponseTests
     public class Parsing
     {
         [Test]
-        public void Constructor_TypeCharacter_SetsType()
-        {
-            const string data = "0";
-
-            var response = new Response(data);
-
-            Assert.AreEqual(ResponseType.File, response.Type);
-        }
-
-        [Test]
         public void Constructor_UnknownCharacter_IsUnknownType()
         {
-            const string data = "]";
+            const string data = "]\t\t\t";
 
             var response = new Response(data);
 
@@ -31,7 +21,7 @@ namespace GopherLib.Test.ResponseTests
         [Test]
         public void Constructor_TypeOnly_KeepsDefaults()
         {
-            const string data = "I";
+            const string data = "I\t\t\t";
 
             var response = new Response(data);
 
@@ -43,14 +33,46 @@ namespace GopherLib.Test.ResponseTests
         }
 
         [Test]
+        public void Constructor_TwoTabs_IsUnknown()
+        {
+            const string data = "0\t\t";
+
+            var response = new Response(data);
+
+            Assert.AreEqual(ResponseType.Unknown, response.Type);
+        }
+
+        [Test]
+        public void Constructor_ThreeTabs_IsType()
+        {
+            const string data = "0\t\t\t";
+
+            var response = new Response(data);
+
+            Assert.AreEqual(ResponseType.File, response.Type);
+        }
+
+        [Test]
         public void Constructor_TypeDisplay_SplitsDisplay()
         {
-            const string data = "0Test Display";
+            const string data = "0Test Display\t\t\t";
 
             var response = new Response(data);
 
             Assert.AreEqual(ResponseType.File, response.Type);
             Assert.AreEqual("Test Display", response.Display);
+        }
+
+        [Test]
+        public void Constructor_Selector_SplitsSelector()
+        {
+            const string data = "0Test Display\tSelector Text\t\t";
+
+            var response = new Response(data);
+
+            Assert.AreEqual(ResponseType.File, response.Type);
+            Assert.AreEqual("Test Display", response.Display);
+            Assert.AreEqual("Selector Text", response.Selector);
         }
     }
 }
