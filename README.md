@@ -18,3 +18,7 @@ ITEF have published several RFCs covering Gopher which provide the baseline spec
 Gopher support has been dropped by all major browsers so for testing [Gopher Browser for Windows](http://www.jaruzel.com/gopher/gopher-client-browser-for-windows) is used.
 
 [SDF.org](https://sdf.org) provide free Gopher hosting and are used as a remote server for validation.
+
+## Goals
+
+This library is intended to support both client and server applications.  A client is quite straightforward as little more than opening a TCP connection and sending plain text is required.  Testing around network interactions is historically difficult so this should provide some challenge for a TDD based approach.

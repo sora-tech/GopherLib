@@ -2,6 +2,7 @@
 
 namespace GobpherLib
 {
+    // The server response is described in RFC 1436 section 2
     public class Response
     {
         public Response(string data)
@@ -17,7 +18,7 @@ namespace GobpherLib
                 Type = (ResponseType)data[0];
             }
 
-            // Respones are tab delimited and must contain 4 section
+            // Respones are tab delimited and must contain at least 4 sections
             var split = data[1..^0].Split('\t');
             if(split.Length < 4)
             {
@@ -28,7 +29,8 @@ namespace GobpherLib
             Display = split[0];
             Selector = split[1];
             Domain = split[2];
-
+            
+            // The port must be a valid number
             if (int.TryParse(split[3], out var port))
             {
                 Port = port;
