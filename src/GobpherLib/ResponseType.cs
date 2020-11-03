@@ -3,19 +3,19 @@
     public enum ResponseType
     {
         Unknown = -1,
-        File = 48,
-        Directory = 49,
-        PhoneBook = 50,
-        Error = 51,
-        BinHexed = 52,
-        DOSBinary = 53,
-        UUEncoded = 54,
-        IndexSearch = 55,
-        Telnet = 56,
-        Binary = 57,
-        RedundantServer = 43,
-        TN3270 = 84,
-        GIF = 103,
-        Image = 73
+        File = '0',
+        Directory = '1',
+        PhoneBook = '2',
+        Error = '3',
+        BinHexed = '4',
+        DOSBinary = '5',
+        UUEncoded = '6',
+        IndexSearch = '7',
+        Telnet = '8',
+        Binary = '9',
+        RedundantServer = '+',
+        TN3270 = 'T',
+        GIF = 'g',
+        Image = 'I'
     }
 }
