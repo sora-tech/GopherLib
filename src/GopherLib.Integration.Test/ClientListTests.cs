@@ -1,0 +1,53 @@
+using GobpherLib;
+using GobpherLib.Facade;
+using NUnit.Framework;
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
+
+namespace GopherLib.Integration.Test
+{
+    [TestFixture]
+    [ExcludeFromCodeCoverage]
+    public class ClientListTests
+    {
+        private void RunServer(object serverObject)
+        {
+            var server = serverObject as TcpListener;
+            
+            server.Start();
+
+            var client = server.AcceptTcpClient();
+
+            var stream = client.GetStream();
+
+            var read = new byte[1024];
+            stream.Read(read, 0, 1);
+            stream.Flush();
+
+            var tcpResponse = Encoding.ASCII.GetBytes("0Test Display\tSelector Text\tDomain Info\t71" + Environment.NewLine + ".");
+            stream.Write(tcpResponse);
+            stream.Flush();
+            
+        }
+
+        [Test]
+        public void Client_WithServer_ReturnsData()
+        {
+            var server = new TcpListener(IPAddress.Loopback, 70);
+            var thread = new Thread(RunServer);
+            thread.Start(server);
+
+            var client = new Client(new Uri("gopher://localhost"));
+            var tcpClient = new SimpleConnection(new TcpConnection());
+
+            var result = client.List(tcpClient, "/");
+
+            Assert.IsNotEmpty(result);
+            Assert.AreEqual(1, result.Count);
+        }
+    }
+}

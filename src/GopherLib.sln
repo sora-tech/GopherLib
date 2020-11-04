@@ -18,7 +18,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RFC", "RFC", "{998E445C-261
 		..\rfc\rfc4266.txt = ..\rfc\rfc4266.txt
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GopherLib.Test", "GopherLib.Test\GopherLib.Test.csproj", "{F833A222-7436-4688-9ED2-58072438770E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GopherLib.Test", "GopherLib.Test\GopherLib.Test.csproj", "{F833A222-7436-4688-9ED2-58072438770E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GopherLib.Integration.Test", "GopherLib.Integration.Test\GopherLib.Integration.Test.csproj", "{2BCB0DC2-1174-4CA9-AC19-201597C38095}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,6 +36,10 @@ Global
 		{F833A222-7436-4688-9ED2-58072438770E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F833A222-7436-4688-9ED2-58072438770E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F833A222-7436-4688-9ED2-58072438770E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BCB0DC2-1174-4CA9-AC19-201597C38095}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BCB0DC2-1174-4CA9-AC19-201597C38095}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BCB0DC2-1174-4CA9-AC19-201597C38095}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BCB0DC2-1174-4CA9-AC19-201597C38095}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
