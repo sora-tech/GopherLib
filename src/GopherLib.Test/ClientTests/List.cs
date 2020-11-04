@@ -2,7 +2,6 @@
 using NSubstitute;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace GopherLib.Test.ClientTests
@@ -106,6 +105,20 @@ namespace GopherLib.Test.ClientTests
 
             Assert.IsNotNull(data);
             Assert.AreEqual(1, data.Count);
+        }
+
+        [Test]
+        public void List_ResponseMultiLine_SplitCorrectly()
+        {
+            var client = new Client(new Uri("gopher://example.com"));
+            var path = "";
+            connectionSuccess.Request(Arg.Any<string>()).Returns(@"0Test Display\tSelector Text\tDomain Info\t71
+3Test Second\tSelector Text\tDomain Info\t70");
+
+            var data = client.List(connectionSuccess, path);
+
+            Assert.IsNotNull(data);
+            Assert.AreEqual(2, data.Count);
         }
 
         [Test]
