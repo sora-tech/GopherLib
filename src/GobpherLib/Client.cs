@@ -34,7 +34,7 @@ namespace GobpherLib
                 return new List<Response>();
             }
 
-            var data = response.Split("\r\n");
+            var data = response.TrimEnd('\0').Split("\r\n");
 
             var result = data.Where(d => string.IsNullOrWhiteSpace(d) == false && d != ".")
                                 .Select(d => new Response(d));

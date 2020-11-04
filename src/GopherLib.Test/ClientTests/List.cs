@@ -108,18 +108,39 @@ namespace GopherLib.Test.ClientTests
         }
 
         [Test]
-        public void List_ResponseMultiLine_DiscardsPeriod()
+        public void List_ResponseMultiLine_DiscardsNull()
         {
             var client = new Client(new Uri("gopher://example.com"));
             var path = "";
-            connectionSuccess.Request(Arg.Any<string>()).Returns(@"0Test Display\tSelector Text\tDomain Info\t71
-3Test Second\tSelector Text\tDomain Info\t70
-.");
+            connectionSuccess.Request(Arg.Any<string>()).Returns("0Test Display\tSelector Text\tDomain Info\t71" + Environment.NewLine +
+"3Test Second\tSelector Text\tDomain Info\t70" + Environment.NewLine +
+".\0\0\0\0\0\0\0\0\0");
 
             var data = client.List(connectionSuccess, path);
 
             Assert.IsNotNull(data);
             Assert.AreEqual(2, data.Count);
+        }
+
+        [Test]
+        public void List_ResponseMultiLine_DiscardsPeriod()
+        {
+            var client = new Client(new Uri("gopher://example.com"));
+            var path = "";
+            connectionSuccess.Request(Arg.Any<string>()).Returns($"0Test Display\tSelector Text\tDomain Info\t71" + Environment.NewLine +
+"2Test Second\tSelector Text\tDomain Info\t70" + Environment.NewLine +
+".");
+
+            var data = client.List(connectionSuccess, path);
+
+            Assert.IsNotNull(data);
+            Assert.AreEqual(2, data.Count);
+
+
+            var response = data[1];
+            Assert.IsNotNull(response);
+
+            Assert.AreEqual(ResponseType.PhoneBook, response.Type);
         }
 
         [Test]

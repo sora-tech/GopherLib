@@ -1,6 +1,5 @@
 ﻿using GobpherLib.Facade;
 using System;
-using System.Net.Sockets;
 using System.Text;
 
 namespace GobpherLib
@@ -41,9 +40,8 @@ namespace GobpherLib
             stream.Write(pathBytes, 0, pathBytes.Length);
             stream.Flush();
 
-            byte[] data = new byte[stream.Length];
-            stream.Position = 0;
-            stream.Read(data, 0, data.Length);
+            byte[] data = new byte[1024];
+            stream.Read(data, 0, 1024);
 
             var result = new string(Encoding.ASCII.GetChars(data));
             
