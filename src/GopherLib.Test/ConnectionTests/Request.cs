@@ -60,6 +60,7 @@ namespace GopherLib.Test.ConnectionTests
         // or changing the internals of Request to provide
         // an interupt point
         [Test]
+        [Ignore("Unable to substitute")]
         public void Request_ListInfo_ReturnsResponse()
         {
             var tcp = new SimpleConnection(tcpClient);
