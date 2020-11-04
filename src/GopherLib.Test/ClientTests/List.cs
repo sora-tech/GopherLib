@@ -108,12 +108,13 @@ namespace GopherLib.Test.ClientTests
         }
 
         [Test]
-        public void List_ResponseMultiLine_SplitCorrectly()
+        public void List_ResponseMultiLine_DiscardsPeriod()
         {
             var client = new Client(new Uri("gopher://example.com"));
             var path = "";
             connectionSuccess.Request(Arg.Any<string>()).Returns(@"0Test Display\tSelector Text\tDomain Info\t71
-3Test Second\tSelector Text\tDomain Info\t70");
+3Test Second\tSelector Text\tDomain Info\t70
+.");
 
             var data = client.List(connectionSuccess, path);
 
