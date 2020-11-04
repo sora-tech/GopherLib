@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GobpherLib
 {
@@ -28,7 +29,15 @@ namespace GobpherLib
 
             var data = connection.Request(path);
 
-            return new List<Response>();
+            if(data == null || data.Count == 0)
+            {
+                return new List<Response>();
+            }
+
+            var result = data.Where(d => string.IsNullOrWhiteSpace(d) == false)
+                                .Select(d => new Response(d));
+
+            return result.ToList();
         }
     }
 }

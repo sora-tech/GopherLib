@@ -59,6 +59,30 @@ namespace GopherLib.Test.ClientTests
         }
 
         [Test]
+        public void List_Path_RequestsPath()
+        {
+            var client = new Client(new Uri("gopher://example.com"));
+            var path = "demo";
+
+            client.List(connectionSuccess, path);
+
+            connectionSuccess.Received(1).Request(Arg.Is("demo"));
+        }
+
+        [Test]
+        public void List_ResponseNull_Empty()
+        {
+            var client = new Client(new Uri("gopher://example.com"));
+            var path = "";
+            connectionSuccess.Request(Arg.Any<string>()).Returns((List<string>)null);
+
+            var data = client.List(connectionSuccess, path);
+
+            Assert.IsNotNull(data);
+            Assert.IsEmpty(data);
+        }
+
+        [Test]
         public void List_ResponseEmpty_Empty()
         {
             var client = new Client(new Uri("gopher://example.com"));
@@ -69,6 +93,37 @@ namespace GopherLib.Test.ClientTests
 
             Assert.IsNotNull(data);
             Assert.IsEmpty(data);
+        }
+
+        [Test]
+        public void List_ResponseValid_BuildsResponse()
+        {
+            var client = new Client(new Uri("gopher://example.com"));
+            var path = "";
+            connectionSuccess.Request(Arg.Any<string>()).Returns(new List<string> { "0Test Display\tSelector Text\tDomain Info\t71" });
+
+            var data = client.List(connectionSuccess, path);
+
+            Assert.IsNotNull(data);
+            Assert.AreEqual(1, data.Count);
+        }
+
+        [Test]
+        public void List_ResponseData_ParsesResponse()
+        {
+            var client = new Client(new Uri("gopher://example.com"));
+            var path = "";
+            connectionSuccess.Request(Arg.Any<string>()).Returns(new List<string> { "1Test Directory\tSelector Text\tDomain Info\t71" });
+
+            var data = client.List(connectionSuccess, path);
+
+            Assert.IsNotNull(data);
+            Assert.AreEqual(1, data.Count);
+
+            var response = data[0];
+            Assert.IsNotNull(response);
+
+            Assert.AreEqual(ResponseType.Directory, response.Type);
         }
     }
 }
