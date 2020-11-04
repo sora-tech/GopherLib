@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-
-namespace GobpherLib
+﻿namespace GobpherLib
 {
     public interface IConnection
     {
         bool Open(string domain, int port);
-        List<string> Request(string path);
+        string Request(string path);
     }
 }

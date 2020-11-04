@@ -74,7 +74,7 @@ namespace GopherLib.Test.ClientTests
         {
             var client = new Client(new Uri("gopher://example.com"));
             var path = "";
-            connectionSuccess.Request(Arg.Any<string>()).Returns((List<string>)null);
+            connectionSuccess.Request(Arg.Any<string>()).Returns((string)null);
 
             var data = client.List(connectionSuccess, path);
 
@@ -87,7 +87,7 @@ namespace GopherLib.Test.ClientTests
         {
             var client = new Client(new Uri("gopher://example.com"));
             var path = "";
-            connectionSuccess.Request(Arg.Any<string>()).Returns(new List<string>());
+            connectionSuccess.Request(Arg.Any<string>()).Returns(string.Empty);
 
             var data = client.List(connectionSuccess, path);
 
@@ -100,7 +100,7 @@ namespace GopherLib.Test.ClientTests
         {
             var client = new Client(new Uri("gopher://example.com"));
             var path = "";
-            connectionSuccess.Request(Arg.Any<string>()).Returns(new List<string> { "0Test Display\tSelector Text\tDomain Info\t71" });
+            connectionSuccess.Request(Arg.Any<string>()).Returns( "0Test Display\tSelector Text\tDomain Info\t71" );
 
             var data = client.List(connectionSuccess, path);
 
@@ -113,7 +113,7 @@ namespace GopherLib.Test.ClientTests
         {
             var client = new Client(new Uri("gopher://example.com"));
             var path = "";
-            connectionSuccess.Request(Arg.Any<string>()).Returns(new List<string> { "1Test Directory\tSelector Text\tDomain Info\t71" });
+            connectionSuccess.Request(Arg.Any<string>()).Returns("1Test Directory\tSelector Text\tDomain Info\t71");
 
             var data = client.List(connectionSuccess, path);
 

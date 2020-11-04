@@ -27,12 +27,14 @@ namespace GobpherLib
                 return new List<Response>();
             }
 
-            var data = connection.Request(path);
+            var response = connection.Request(path);
 
-            if(data == null || data.Count == 0)
+            if(string.IsNullOrWhiteSpace(response))
             {
                 return new List<Response>();
             }
+
+            var data = response.Split("");
 
             var result = data.Where(d => string.IsNullOrWhiteSpace(d) == false)
                                 .Select(d => new Response(d));
