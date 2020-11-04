@@ -7,7 +7,7 @@ namespace GopherLib.Test.ClientTests
 {
     [TestFixture]
     [ExcludeFromCodeCoverage]
-    public class Request
+    public class Setup
     {
         [Test]
         public void Client_Created_SetsDomain()
