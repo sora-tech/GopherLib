@@ -11,6 +11,7 @@ using System.Threading;
 namespace GopherLib.Integration.Test
 {
     [TestFixture]
+    [Category("Integration")]
     [ExcludeFromCodeCoverage]
     public class ClientListTests
     {
@@ -24,6 +25,8 @@ namespace GopherLib.Integration.Test
 
             var stream = client.GetStream();
 
+            // Read the path selector from the stream
+            // and discard it for this test
             var read = new byte[1024];
             stream.Read(read, 0, 1);
             stream.Flush();
