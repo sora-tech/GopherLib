@@ -40,6 +40,7 @@ namespace GobpherLib
             stream.Write(pathBytes, 0, pathBytes.Length);
             stream.Flush();
 
+            // Will fail on text larger than 1024
             byte[] data = new byte[1024];
             stream.Read(data, 0, 1024);
 
@@ -50,7 +51,23 @@ namespace GobpherLib
 
         public byte[] RequestBytes(string path)
         {
-            throw new NotImplementedException();
+            if (open == false)
+            {
+                throw new Exception();
+            }
+
+            var stream = client.GetStream();
+
+            var pathBytes = Encoding.ASCII.GetBytes(path);
+
+            stream.Write(pathBytes, 0, pathBytes.Length);
+            stream.Flush();
+
+            // Will fail on files not exactly 1024 bytes
+            byte[] data = new byte[1024];
+            stream.Read(data, 0, 1024);
+
+            return data;
         }
     }
 }

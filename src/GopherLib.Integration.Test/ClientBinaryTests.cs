@@ -13,7 +13,7 @@ namespace GopherLib.Integration.Test
     [TestFixture]
     [Category("Integration")]
     [ExcludeFromCodeCoverage]
-    public class ClientListTests
+    public class ClientBinaryTests
     {
         private void RunServer(object serverObject)
         {
@@ -31,14 +31,14 @@ namespace GopherLib.Integration.Test
             stream.Read(read, 0, 1);
             stream.Flush();
 
-            var tcpResponse = Encoding.ASCII.GetBytes("0Test Display\tSelector Text\tDomain Info\t71" + Environment.NewLine + ".");
+            var tcpResponse = new byte[] { 5, 4, 3, 2, 1 };
             stream.Write(tcpResponse);
             stream.Flush();
             
         }
 
         [Test]
-        public void ClientList_WithServer_ReturnsData()
+        public void ClientBinary_WithServer_ReturnsData()
         {
             var server = new TcpListener(IPAddress.Loopback, 70);
             var thread = new Thread(RunServer);
@@ -47,10 +47,13 @@ namespace GopherLib.Integration.Test
             var client = new Client(new Uri("gopher://localhost"));
             var tcpClient = new SimpleConnection(new TcpConnection());
 
-            var result = client.Menu(tcpClient, "/");
+            var result = client.Binary(tcpClient, "/data");
 
-            Assert.IsNotEmpty(result);
-            Assert.AreEqual(1, result.Count);
+            var expected = new byte[] { 5, 4, 3, 2, 1 };
+
+            Assert.AreNotEqual(0, result.Length);
+            Assert.AreEqual(5, result.Length);
+            Assert.AreEqual(expected, result.ToArray());
         }
     }
 }
