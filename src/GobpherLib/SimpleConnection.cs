@@ -47,5 +47,10 @@ namespace GobpherLib
             
             return result;
         }
+
+        public byte[] RequestBytes(string path)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

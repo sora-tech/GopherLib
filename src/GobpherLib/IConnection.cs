@@ -4,5 +4,6 @@
     {
         bool Open(string domain, int port);
         string Request(string path);
+        byte[] RequestBytes(string path);
     }
 }

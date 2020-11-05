@@ -42,6 +42,24 @@ namespace GobpherLib
             return result.ToList();
         }
 
+        public Span<byte> Binary(IConnection connection, string selector)
+        {
+            if (string.IsNullOrWhiteSpace(selector))
+            {
+                return new Span<byte>();
+            }
+
+            var opened = connection.Open(Domain.Host, Domain.Port);
+            if (opened == false)
+            {
+                return new Span<byte>();
+            }
+
+            var response = connection.RequestBytes(selector);
+
+            return new Span<byte>(response);
+        }
+
         public string TextFile(IConnection connection, string selector)
         {
             //Must request a document?
