@@ -18,7 +18,7 @@ namespace GobpherLib
 
         public Uri Domain { get; private set; }
 
-        public List<Response> List(IConnection connection, string path)
+        public List<Response> Menu(IConnection connection, string selector)
         {
             var opened = connection.Open(Domain.Host, Domain.Port);
 
@@ -27,7 +27,7 @@ namespace GobpherLib
                 return new List<Response>();
             }
 
-            var response = connection.Request(path);
+            var response = connection.Request(selector);
 
             if(string.IsNullOrWhiteSpace(response))
             {

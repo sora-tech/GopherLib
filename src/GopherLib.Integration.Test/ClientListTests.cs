@@ -47,7 +47,7 @@ namespace GopherLib.Integration.Test
             var client = new Client(new Uri("gopher://localhost"));
             var tcpClient = new SimpleConnection(new TcpConnection());
 
-            var result = client.List(tcpClient, "/");
+            var result = client.Menu(tcpClient, "/");
 
             Assert.IsNotEmpty(result);
             Assert.AreEqual(1, result.Count);

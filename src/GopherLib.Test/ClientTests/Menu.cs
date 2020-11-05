@@ -8,7 +8,7 @@ namespace GopherLib.Test.ClientTests
 {
     [TestFixture]
     [ExcludeFromCodeCoverage]
-    public class List
+    public class Menu
     {
         IConnection connectionSuccess;
 
@@ -20,118 +20,118 @@ namespace GopherLib.Test.ClientTests
         }
 
         [Test]
-        public void List_Empty_OpensConnection()
+        public void Menu_Empty_OpensConnection()
         {
             var client = new Client(new Uri("gopher://example.com"));
-            var path = "";
+            var selector = "";
 
             var connection = Substitute.For<IConnection>();
 
-            client.List(connection, path);
+            client.Menu(connection, selector);
 
             connection.Received(1).Open(Arg.Is("example.com"), Arg.Is(70));
         }
 
         [Test]
-        public void List_OpenFails_DoesNotRequest()
+        public void Menu_OpenFails_DoesNotRequest()
         {
             var client = new Client(new Uri("gopher://example.com"));
-            var path = "";
+            var selector = "";
 
             var connection = Substitute.For<IConnection>();
             connection.Open(Arg.Any<string>(), Arg.Any<int>()).Returns(false);
 
-            client.List(connection, path);
+            client.Menu(connection, selector);
 
             connection.Received(0).Request(Arg.Any<string>());
         }
 
         [Test]
-        public void List_Empty_RequestsEmpty()
+        public void Menu_Empty_RequestsEmpty()
         {
             var client = new Client(new Uri("gopher://example.com"));
-            var path = "";
+            var selector = "";
 
-            client.List(connectionSuccess, path);
+            client.Menu(connectionSuccess, selector);
 
             connectionSuccess.Received(1).Request(Arg.Is(""));
         }
 
         [Test]
-        public void List_Path_RequestsPath()
+        public void Menu_Path_RequestsPath()
         {
             var client = new Client(new Uri("gopher://example.com"));
-            var path = "demo";
+            var selector = "demo";
 
-            client.List(connectionSuccess, path);
+            client.Menu(connectionSuccess, selector);
 
             connectionSuccess.Received(1).Request(Arg.Is("demo"));
         }
 
         [Test]
-        public void List_ResponseNull_Empty()
+        public void Menu_ResponseNull_Empty()
         {
             var client = new Client(new Uri("gopher://example.com"));
-            var path = "";
+            var selector = "";
             connectionSuccess.Request(Arg.Any<string>()).Returns((string)null);
 
-            var data = client.List(connectionSuccess, path);
+            var data = client.Menu(connectionSuccess, selector);
 
             Assert.IsNotNull(data);
             Assert.IsEmpty(data);
         }
 
         [Test]
-        public void List_ResponseEmpty_Empty()
+        public void Menu_ResponseEmpty_Empty()
         {
             var client = new Client(new Uri("gopher://example.com"));
-            var path = "";
+            var selector = "";
             connectionSuccess.Request(Arg.Any<string>()).Returns(string.Empty);
 
-            var data = client.List(connectionSuccess, path);
+            var data = client.Menu(connectionSuccess, selector);
 
             Assert.IsNotNull(data);
             Assert.IsEmpty(data);
         }
 
         [Test]
-        public void List_ResponseValid_BuildsResponse()
+        public void Menu_ResponseValid_BuildsResponse()
         {
             var client = new Client(new Uri("gopher://example.com"));
-            var path = "";
+            var selector = "";
             connectionSuccess.Request(Arg.Any<string>()).Returns( "0Test Display\tSelector Text\tDomain Info\t71" );
 
-            var data = client.List(connectionSuccess, path);
+            var data = client.Menu(connectionSuccess, selector);
 
             Assert.IsNotNull(data);
             Assert.AreEqual(1, data.Count);
         }
 
         [Test]
-        public void List_ResponseMultiLine_DiscardsNull()
+        public void Menu_ResponseMultiLine_DiscardsNull()
         {
             var client = new Client(new Uri("gopher://example.com"));
-            var path = "";
+            var selector = "";
             connectionSuccess.Request(Arg.Any<string>()).Returns("0Test Display\tSelector Text\tDomain Info\t71" + Environment.NewLine +
 "3Test Second\tSelector Text\tDomain Info\t70" + Environment.NewLine +
 ".\0\0\0\0\0\0\0\0\0");
 
-            var data = client.List(connectionSuccess, path);
+            var data = client.Menu(connectionSuccess, selector);
 
             Assert.IsNotNull(data);
             Assert.AreEqual(2, data.Count);
         }
 
         [Test]
-        public void List_ResponseMultiLine_DiscardsPeriod()
+        public void Menu_ResponseMultiLine_DiscardsPeriod()
         {
             var client = new Client(new Uri("gopher://example.com"));
-            var path = "";
+            var selector = "";
             connectionSuccess.Request(Arg.Any<string>()).Returns($"0Test Display\tSelector Text\tDomain Info\t71" + Environment.NewLine +
 "2Test Second\tSelector Text\tDomain Info\t70" + Environment.NewLine +
 ".");
 
-            var data = client.List(connectionSuccess, path);
+            var data = client.Menu(connectionSuccess, selector);
 
             Assert.IsNotNull(data);
             Assert.AreEqual(2, data.Count);
@@ -144,13 +144,13 @@ namespace GopherLib.Test.ClientTests
         }
 
         [Test]
-        public void List_ResponseData_ParsesResponse()
+        public void Menu_ResponseData_ParsesResponse()
         {
             var client = new Client(new Uri("gopher://example.com"));
-            var path = "";
+            var selector = "";
             connectionSuccess.Request(Arg.Any<string>()).Returns("1Test Directory\tSelector Text\tDomain Info\t71");
 
-            var data = client.List(connectionSuccess, path);
+            var data = client.Menu(connectionSuccess, selector);
 
             Assert.IsNotNull(data);
             Assert.AreEqual(1, data.Count);
