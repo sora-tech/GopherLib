@@ -41,5 +41,31 @@ namespace GobpherLib
 
             return result.ToList();
         }
+
+        public string TextFile(IConnection connection, string selector)
+        {
+            //Must request a document?
+            if (string.IsNullOrWhiteSpace(selector))
+            {
+                return string.Empty;
+            }
+
+            var opened = connection.Open(Domain.Host, Domain.Port);
+
+            if (opened == false)
+            {
+                return string.Empty;
+            }
+
+            var response = connection.Request(selector);
+
+            //Strip trailing null from buffers and CRLF + . termination
+            response = response.TrimEnd('\0').Trim().TrimEnd('.');
+
+            // Replace CRLF + .. that is added not to early terminate the document
+            response = response.Replace("\r\n..", "\r\n.");
+
+            return response;
+        }
     }
 }
