@@ -57,7 +57,7 @@ namespace GobpherLib
 
             var response = connection.RequestBytes(selector);
 
-            return new Span<byte>(response);
+            return response;
         }
 
         public string TextFile(IConnection connection, string selector)

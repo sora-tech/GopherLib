@@ -2,6 +2,7 @@
 using NSubstitute;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace GopherLib.Test.ClientTests
@@ -50,13 +51,13 @@ namespace GopherLib.Test.ClientTests
         {
             var client = new Client(new Uri("gopher://example.com"));
             var selector = "";
+            var testConnection = new TestDataConnection();
+            testConnection.ShouldOpen = false;
 
-            var connection = Substitute.For<IConnection>();
-            connection.Open(Arg.Any<string>(), Arg.Any<int>()).Returns(false);
 
-            client.Binary(connection, selector);
+            client.Binary(testConnection, selector);
 
-            connection.Received(0).RequestBytes(Arg.Any<string>());
+            Assert.IsEmpty(testConnection.BytesPath);
         }
 
 
@@ -65,10 +66,12 @@ namespace GopherLib.Test.ClientTests
         {
             var client = new Client(new Uri("gopher://example.com"));
             var selector = "selector";
+            var testConnection = new TestDataConnection();
 
-            client.Binary(connectionSuccess, selector);
+            client.Binary(testConnection, selector);
 
-            connectionSuccess.Received(1).RequestBytes(Arg.Is("selector"));
+            Assert.IsNotEmpty(testConnection.BytesPath);
+            Assert.AreEqual(selector, testConnection.BytesPath[0]);
         }
 
         [Test]
@@ -76,12 +79,35 @@ namespace GopherLib.Test.ClientTests
         {
             var client = new Client(new Uri("gopher://example.com"));
             var selector = "selector";
-            var testValue = new byte[2] { 1, 2 };
-            connectionSuccess.RequestBytes(Arg.Is("selector")).Returns(testValue);
+            
+            var testConnection = new TestDataConnection();
 
-            var response = client.Binary(connectionSuccess, selector);
+            var response = client.Binary(testConnection, selector);
 
-            Assert.AreEqual(testValue, response.ToArray());
+            Assert.AreEqual(testConnection.RequestBytes("selector").ToArray(), response.ToArray());
+        }
+    }
+
+    // Due to substitution frameworks unable to cope with Span<byte>
+    // a "real" mock class is created with additions to allow inspection
+    class TestDataConnection : IConnection
+    {
+        public List<string> BytesPath = new List<string>();
+        public bool ShouldOpen = true;
+        public bool Open(string domain, int port)
+        {
+            return ShouldOpen;
+        }
+
+        public string Request(string path)
+        {
+            return string.Empty;
+        }
+
+        public Span<byte> RequestBytes(string path)
+        {
+            BytesPath.Add(path);
+            return new byte[2] { 1, 2 };
         }
     }
 }

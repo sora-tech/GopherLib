@@ -49,7 +49,7 @@ namespace GobpherLib
             return result;
         }
 
-        public byte[] RequestBytes(string path)
+        public Span<byte> RequestBytes(string path)
         {
             if (open == false)
             {
