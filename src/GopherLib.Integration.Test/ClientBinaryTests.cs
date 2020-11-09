@@ -33,8 +33,8 @@ namespace GopherLib.Integration.Test
 
             var tcpResponse = new byte[] { 5, 4, 3, 2, 1 };
             stream.Write(tcpResponse);
-            stream.Flush();
-            
+
+            stream.Close();
         }
 
         [Test]

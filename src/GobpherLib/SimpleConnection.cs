@@ -1,5 +1,6 @@
 ﻿using GobpherLib.Facade;
 using System;
+using System.IO;
 using System.Text;
 
 namespace GobpherLib
@@ -63,11 +64,24 @@ namespace GobpherLib
             stream.Write(pathBytes, 0, pathBytes.Length);
             stream.Flush();
 
-            // Will fail on files not exactly 1024 bytes
-            byte[] data = new byte[1024];
-            stream.Read(data, 0, 1024);
+            var data = new byte[1024];
+            var size = 0;
 
-            return data;
+            var buffer = stream.Read(data);
+            while (buffer != 0)
+            {
+                try
+                {
+                    size += buffer;
+                    buffer = stream.Read(data);
+                }
+                catch(IOException)  //Server closed stream etc.
+                {
+                    break;
+                }
+            }
+
+            return data[0..size];
         }
     }
 }
