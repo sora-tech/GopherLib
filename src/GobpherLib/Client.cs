@@ -85,5 +85,34 @@ namespace GobpherLib
 
             return response;
         }
+
+        public List<Response> Search(IConnection connection, string selector, string term)
+        {
+            if (string.IsNullOrWhiteSpace(term))
+            {
+                return new List<Response>();
+            }
+
+            var opened = connection.Open(Domain.Host, Domain.Port);
+
+            if(opened == false)
+            {
+                return new List<Response>();
+            }
+
+            var response = connection.Request($"{selector}\t{term}");
+
+            if (string.IsNullOrWhiteSpace(response))
+            {
+                return new List<Response>();
+            }
+
+            var data = response.TrimEnd('\0').Split("\r\n");
+
+            var result = data.Where(d => string.IsNullOrWhiteSpace(d) == false && d != ".")
+                                .Select(d => new Response(d));
+
+            return result.ToList();
+        }
     }
 }
