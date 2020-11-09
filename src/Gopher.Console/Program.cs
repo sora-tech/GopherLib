@@ -1,4 +1,5 @@
 ﻿using GopherLib;
+using GopherLib.Facade;
 using System;
 
 namespace Gopher.Console
@@ -13,7 +14,16 @@ namespace Gopher.Console
 
             var client = new Client(uri);
 
-            //var response = client.Menu();
+            var connection = new SimpleConnection(new TcpConnection());
+
+            var response = client.Menu(connection, "");
+
+            foreach (var item in response)
+            {
+                System.Console.WriteLine($"{item.Type}, {item.Display} - {item.Selector}");
+            }
+
+            System.Console.ReadLine();
         }
     }
 }
