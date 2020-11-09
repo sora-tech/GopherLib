@@ -53,32 +53,41 @@ namespace GopherLib.Test.ConnectionTests
             Assert.AreEqual("info", result);
         }
 
-
-        // Test fails due to the lack of visibility to the stream
-        // during the execution.
-        // Abstracting the stream could provide this visibility
-        // or changing the internals of Request to provide
-        // an interupt point
         [Test]
-        [Ignore("Unable to substitute")]
         public void Request_ListInfo_ReturnsResponse()
         {
-            var tcp = new SimpleConnection(tcpClient);
-            var stream = new MemoryStream();
-
-            tcpClient.Connected.Returns(true);
-            tcpClient.GetStream().Returns<Stream>(stream);
+            var testClient = new TestRequestClient();
+            var tcp = new SimpleConnection(testClient);
 
             tcp.Open("", 0);
 
-            var tcpResponse = Encoding.ASCII.GetBytes("test response");
-            stream.Write(tcpResponse);
-            stream.Flush();
-
             var response = tcp.Request("info");
 
-
             Assert.AreEqual("test response", response);
+        }
+    }
+
+    class TestRequestClient : ITcpConnection
+    {
+        public byte[] data = Encoding.ASCII.GetBytes("test response");
+
+        public bool Connected => true;
+
+        public void Connect(string domain, int port)
+        {
+        }
+
+        public Stream GetStream()
+        {
+            //space for the request buffer to be written
+            var request = new byte[] { 0,0,0,0 };
+
+            var stream = new MemoryStream(request.Length + data.Length);
+            stream.Write(request);
+            stream.Write(data);
+            stream.Position = 0;
+
+            return stream;
         }
     }
 }
