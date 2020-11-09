@@ -50,21 +50,34 @@ namespace GopherLib
             stream.Write(pathBytes, 0, pathBytes.Length);
             stream.Flush();
 
+            var buffer = new byte[1024];
             var data = new byte[1024];
             var size = 0;
-            var buffer = stream.Read(data, 0, data.Length);
-            while (buffer != 0)
+            int read;
+            do
             {
                 try
                 {
-                    size += buffer;
-                    buffer = stream.Read(data, 0, data.Length);
+                    read = stream.Read(buffer, 0, 1024);
+                    buffer.CopyTo(data, size);
+                    size += read;
                 }
-                catch (IOException)  //Server closed stream etc.
+                catch   //Server closed stream etc.
                 {
                     break;
                 }
-            }
+
+                if (size >= data.Length)
+                {
+                    var temp = new byte[data.Length];
+                    data.CopyTo(temp, 0);
+
+                    data = new byte[data.Length + 1024];
+                    temp.CopyTo(data, 0);
+                }
+
+
+            } while (read != 0);
 
             return data[0..size];
         }

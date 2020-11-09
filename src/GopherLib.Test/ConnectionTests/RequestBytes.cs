@@ -67,6 +67,25 @@ namespace GopherLib.Test.ConnectionTests
             Assert.AreEqual(testClient.data.Length, result.Length);
             Assert.AreEqual(testClient.data, result.ToArray());
         }
+
+        [Test]
+        public void RequestBytes_LargeResponse_EntireResponse()
+        {
+            var testClient = new TestClient();
+
+            var tcp = new SimpleConnection(testClient);
+
+            testClient.data = new byte[2048];
+            testClient.data[5] = 70;
+            testClient.data[2000] = 10;
+
+            tcp.Open("", 0);
+            var result = tcp.RequestBytes("info");
+
+            Assert.AreEqual(2048, result.Length);
+            Assert.AreEqual(70, result.Slice(5, 1)[0]);
+            Assert.AreEqual(10, result.Slice(2000, 1)[0]);
+        }
     }
 
     class TestClient : ITcpConnection
