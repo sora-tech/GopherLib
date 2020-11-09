@@ -29,23 +29,9 @@ namespace GobpherLib
 
         public string Request(string path)
         {
-            if (open == false)
-            {
-                throw new Exception();
-            }
+            var data = RequestBytes(path);
 
-            var stream = client.GetStream();
-
-            var pathBytes = Encoding.ASCII.GetBytes(path);
-
-            stream.Write(pathBytes, 0, pathBytes.Length);
-            stream.Flush();
-
-            // Will fail on text larger than 1024
-            byte[] data = new byte[1024];
-            stream.Read(data, 0, 1024);
-
-            var result = new string(Encoding.ASCII.GetChars(data));
+            var result = new string(Encoding.ASCII.GetChars(data.ToArray()));
             
             return result;
         }
@@ -66,7 +52,6 @@ namespace GobpherLib
 
             var data = new byte[1024];
             var size = 0;
-
             var buffer = stream.Read(data);
             while (buffer != 0)
             {
@@ -75,7 +60,7 @@ namespace GobpherLib
                     size += buffer;
                     buffer = stream.Read(data);
                 }
-                catch(IOException)  //Server closed stream etc.
+                catch (IOException)  //Server closed stream etc.
                 {
                     break;
                 }
