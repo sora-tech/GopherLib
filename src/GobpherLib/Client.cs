@@ -29,17 +29,7 @@ namespace GobpherLib
 
             var response = connection.Request(selector);
 
-            if(string.IsNullOrWhiteSpace(response))
-            {
-                return new List<Response>();
-            }
-
-            var data = response.TrimEnd('\0').Split("\r\n");
-
-            var result = data.Where(d => string.IsNullOrWhiteSpace(d) == false && d != ".")
-                                .Select(d => new Response(d));
-
-            return result.ToList();
+            return ParseResponse(response);
         }
 
         public Span<byte> Binary(IConnection connection, string selector)
@@ -95,13 +85,18 @@ namespace GobpherLib
 
             var opened = connection.Open(Domain.Host, Domain.Port);
 
-            if(opened == false)
+            if (opened == false)
             {
                 return new List<Response>();
             }
 
             var response = connection.Request($"{selector}\t{term}");
 
+            return ParseResponse(response);
+        }
+
+        private static List<Response> ParseResponse(string response)
+        {
             if (string.IsNullOrWhiteSpace(response))
             {
                 return new List<Response>();
