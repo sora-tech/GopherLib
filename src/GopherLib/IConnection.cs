@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GobpherLib
+namespace GopherLib
 {
     public interface IConnection
     {

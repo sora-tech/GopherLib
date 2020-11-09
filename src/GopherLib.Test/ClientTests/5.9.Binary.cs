@@ -1,4 +1,4 @@
-﻿using GobpherLib;
+﻿using GopherLib;
 using NSubstitute;
 using NUnit.Framework;
 using System;

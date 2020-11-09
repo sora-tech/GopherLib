@@ -1,4 +1,4 @@
-﻿using GobpherLib;
+﻿using GopherLib;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;

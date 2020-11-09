@@ -1,4 +1,4 @@
-﻿namespace GobpherLib
+﻿namespace GopherLib
 {
     public enum ResponseType
     {

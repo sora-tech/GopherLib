@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Net.Sockets;
 
-namespace GobpherLib.Facade
+namespace GopherLib.Facade
 {
     public class TcpConnection : ITcpConnection
     {

@@ -1,5 +1,5 @@
-using GobpherLib;
-using GobpherLib.Facade;
+using GopherLib;
+using GopherLib.Facade;
 using NUnit.Framework;
 using System;
 using System.Diagnostics.CodeAnalysis;

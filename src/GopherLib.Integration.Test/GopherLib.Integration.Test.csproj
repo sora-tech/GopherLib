@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GobpherLib\GobpherLib.csproj" />
+    <ProjectReference Include="..\GopherLib\GopherLib.csproj" />
   </ItemGroup>
 
 </Project>

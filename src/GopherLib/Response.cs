@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GobpherLib
+namespace GopherLib
 {
     // The server response is described in RFC 1436 section 2
     public class Response

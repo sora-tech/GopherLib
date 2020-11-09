@@ -1,9 +1,9 @@
-﻿using GobpherLib.Facade;
+﻿using GopherLib.Facade;
 using System;
 using System.IO;
 using System.Text;
 
-namespace GobpherLib
+namespace GopherLib
 {
     public class SimpleConnection : IConnection
     {

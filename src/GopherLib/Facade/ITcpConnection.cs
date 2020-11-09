@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace GobpherLib.Facade
+namespace GopherLib.Facade
 {
     public interface ITcpConnection
     {
