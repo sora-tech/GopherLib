@@ -11,6 +11,7 @@ namespace GopherLib.Test.ClientTests
     public class Menu
     {
         IConnection connectionSuccess;
+        const string terminator = "\t\r\n\0";
 
         [SetUp]
         public void Setup()
@@ -47,14 +48,14 @@ namespace GopherLib.Test.ClientTests
         }
 
         [Test]
-        public void Menu_Empty_RequestsEmpty()
+        public void Menu_Empty_RequestsUNASCII()
         {
             var client = new Client(new Uri("gopher://example.com"));
             var selector = "";
 
             client.Menu(connectionSuccess, selector);
 
-            connectionSuccess.Received(1).Request(Arg.Is(""));
+            connectionSuccess.Received(1).Request(Arg.Is(terminator));
         }
 
         [Test]
@@ -65,7 +66,7 @@ namespace GopherLib.Test.ClientTests
 
             client.Menu(connectionSuccess, selector);
 
-            connectionSuccess.Received(1).Request(Arg.Is("demo"));
+            connectionSuccess.Received(1).Request(Arg.Is("demo" + terminator));
         }
 
         [Test]

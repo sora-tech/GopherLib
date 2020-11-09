@@ -52,13 +52,13 @@ namespace GopherLib
 
             var data = new byte[1024];
             var size = 0;
-            var buffer = stream.Read(data);
+            var buffer = stream.Read(data, 0, data.Length);
             while (buffer != 0)
             {
                 try
                 {
                     size += buffer;
-                    buffer = stream.Read(data);
+                    buffer = stream.Read(data, 0, data.Length);
                 }
                 catch (IOException)  //Server closed stream etc.
                 {

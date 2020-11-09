@@ -12,6 +12,7 @@ namespace GopherLib.Test.ClientTests
     public class Binary
     {
         IConnection connectionSuccess;
+        private const string terminator = "\t\r\n\0";
 
         [SetUp]
         public void Setup()
@@ -62,7 +63,7 @@ namespace GopherLib.Test.ClientTests
 
 
         [Test]
-        public void Binary_Selector_RequestsSelector()
+        public void Binary_Selector_RequestsUNASCII()
         {
             var client = new Client(new Uri("gopher://example.com"));
             var selector = "selector";
@@ -71,7 +72,7 @@ namespace GopherLib.Test.ClientTests
             client.Binary(testConnection, selector);
 
             Assert.IsNotEmpty(testConnection.BytesPath);
-            Assert.AreEqual(selector, testConnection.BytesPath[0]);
+            Assert.AreEqual(selector + terminator, testConnection.BytesPath[0]);
         }
 
         [Test]

@@ -16,6 +16,8 @@ namespace GopherLib
             Domain = domain;
         }
 
+        private const string terminator = "\t\r\n\0";
+
         public Uri Domain { get; private set; }
 
         public List<Response> Menu(IConnection connection, string selector)
@@ -27,7 +29,7 @@ namespace GopherLib
                 return new List<Response>();
             }
 
-            var response = connection.Request(selector);
+            var response = connection.Request(selector + terminator);
 
             return ParseResponse(response);
         }
@@ -45,7 +47,7 @@ namespace GopherLib
                 return new Span<byte>();
             }
 
-            var response = connection.RequestBytes(selector);
+            var response = connection.RequestBytes(selector + terminator);
 
             return response;
         }
@@ -65,7 +67,7 @@ namespace GopherLib
                 return string.Empty;
             }
 
-            var response = connection.Request(selector);
+            var response = connection.Request(selector + terminator);
 
             //Strip trailing null from buffers and CRLF + . termination
             response = response.TrimEnd('\0').Trim().TrimEnd('.');

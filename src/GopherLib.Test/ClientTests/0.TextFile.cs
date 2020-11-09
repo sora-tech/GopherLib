@@ -12,6 +12,8 @@ namespace GopherLib.Test.ClientTests
     {
         IConnection connectionSuccess;
 
+        private const string terminator = "\t\r\n\0";
+
         [SetUp]
         public void Setup()
         {
@@ -60,14 +62,14 @@ namespace GopherLib.Test.ClientTests
         }
 
         [Test]
-        public void TextFile_Selector_RequestsSelector()
+        public void TextFile_Selector_RequestsUNASCII()
         {
             var client = new Client(new Uri("gopher://example.com"));
             var selector = "selector";
 
             client.TextFile(connectionSuccess, selector);
 
-            connectionSuccess.Received(1).Request(Arg.Is("selector"));
+            connectionSuccess.Received(1).Request(Arg.Is("selector\t\r\n\0"));
         }
 
         [Test]
@@ -76,7 +78,7 @@ namespace GopherLib.Test.ClientTests
             var client = new Client(new Uri("gopher://example.com"));
             var selector = "selector";
             const string testValue = "test data file";
-            connectionSuccess.Request(Arg.Is("selector")).Returns(testValue);
+            connectionSuccess.Request(Arg.Is("selector" + terminator)).Returns(testValue);
 
             var response = client.TextFile(connectionSuccess, selector);
 
@@ -91,7 +93,7 @@ namespace GopherLib.Test.ClientTests
             const string testValue = "test data file";
             string responseValue = testValue + "." + Environment.NewLine;   //Append the LASTLINE value ".CRLF"
 
-            connectionSuccess.Request(Arg.Is("selector")).Returns(responseValue);
+            connectionSuccess.Request(Arg.Is("selector" + terminator)).Returns(responseValue);
 
             var response = client.TextFile(connectionSuccess, selector);
 
@@ -107,7 +109,7 @@ namespace GopherLib.Test.ClientTests
             string responseValue = testValue + "." + Environment.NewLine;   //Append the LASTLINE value ".CRLF"
             responseValue += "\0\0\0\0\0\0";
 
-            connectionSuccess.Request(Arg.Is("selector")).Returns(responseValue);
+            connectionSuccess.Request(Arg.Is("selector" + terminator)).Returns(responseValue);
 
             var response = client.TextFile(connectionSuccess, selector);
 
@@ -132,7 +134,7 @@ test.
 .
 test";
 
-            connectionSuccess.Request(Arg.Is("selector")).Returns(testValue);
+            connectionSuccess.Request(Arg.Is("selector" + terminator)).Returns(testValue);
 
             var response = client.TextFile(connectionSuccess, selector);
 
@@ -152,7 +154,7 @@ test.
 .
 test";
 
-            connectionSuccess.Request(Arg.Is("selector")).Returns(testValue);
+            connectionSuccess.Request(Arg.Is("selector" + terminator)).Returns(testValue);
 
             var response = client.TextFile(connectionSuccess, selector);
 
