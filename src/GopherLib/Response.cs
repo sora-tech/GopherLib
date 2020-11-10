@@ -13,16 +13,16 @@ namespace GopherLib
             }
 
             // First character of any response is the document type
-            if (Enum.IsDefined(typeof(ResponseType), (int)data[0]))
+            if (Enum.IsDefined(typeof(ItemType), (int)data[0]))
             {
-                Type = (ResponseType)data[0];
+                Type = (ItemType)data[0];
             }
 
             // Respones are tab delimited and must contain at least 4 sections
             var split = data[1..^0].Split('\t');
             if(split.Length < 4)
             {
-                Type = ResponseType.Unknown;
+                Type = ItemType.Unknown;
                 return;
             }
 
@@ -37,7 +37,7 @@ namespace GopherLib
             }
         }
 
-        public ResponseType Type { get; private set; } = ResponseType.Unknown;
+        public ItemType Type { get; private set; } = ItemType.Unknown;
         public string Display { get; private set; } = string.Empty;
         public string Selector { get; private set; } = string.Empty;
         public string Domain { get; private set; } = string.Empty;

@@ -25,7 +25,7 @@ namespace GopherLib.Test.ResponseTests
             var response = new Response(data);
 
             Assert.IsNotNull(response);
-            Assert.AreEqual(ResponseType.Unknown, response.Type);
+            Assert.AreEqual(ItemType.Unknown, response.Type);
         }
 
         [Test]

@@ -14,14 +14,8 @@ namespace GopherLib.Facade
 
         public bool Connected => client.Connected;
 
-        public void Connect(string domain, int port)
-        {
-            client.Connect(domain, port);
-        }
+        public void Connect(string domain, int port) => client.Connect(domain, port);
 
-        public Stream GetStream()
-        {
-            return client.GetStream();
-        }
+        public Stream GetStream() => client.GetStream();
     }
 }

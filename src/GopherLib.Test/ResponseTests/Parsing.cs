@@ -14,7 +14,7 @@ namespace GopherLib.Test.ResponseTests
 
             var response = new Response(data);
 
-            Assert.AreEqual(ResponseType.Unknown, response.Type);
+            Assert.AreEqual(ItemType.Unknown, response.Type);
         }
 
         [Test]
@@ -24,7 +24,7 @@ namespace GopherLib.Test.ResponseTests
 
             var response = new Response(data);
 
-            Assert.AreEqual(ResponseType.Image, response.Type);
+            Assert.AreEqual(ItemType.Image, response.Type);
             Assert.IsEmpty(response.Display);
             Assert.IsEmpty(response.Selector);
             Assert.IsEmpty(response.Domain);
@@ -38,7 +38,7 @@ namespace GopherLib.Test.ResponseTests
 
             var response = new Response(data);
 
-            Assert.AreEqual(ResponseType.Unknown, response.Type);
+            Assert.AreEqual(ItemType.Unknown, response.Type);
         }
 
         [Test]
@@ -48,7 +48,7 @@ namespace GopherLib.Test.ResponseTests
 
             var response = new Response(data);
 
-            Assert.AreEqual(ResponseType.File, response.Type);
+            Assert.AreEqual(ItemType.File, response.Type);
         }
 
         [Test]
@@ -58,7 +58,7 @@ namespace GopherLib.Test.ResponseTests
 
             var response = new Response(data);
 
-            Assert.AreEqual(ResponseType.File, response.Type);
+            Assert.AreEqual(ItemType.File, response.Type);
         }
 
         [Test]

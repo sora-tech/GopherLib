@@ -9,20 +9,20 @@ namespace GopherLib.Test.ResponseTests
     public class Type
     {
         [Test]
-        public void ResponseType_Unknown_NotKnown()
+        public void ItemType_Unknown_NotKnown()
         {
             //Given the list of supported types from the RFC
             //the value of Uknown must not be part of them
 
             var knownTypes = new List<char> { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', 'T', 'g', 'I' };
 
-            var unknown = ResponseType.Unknown;
+            var unknown = ItemType.Unknown;
 
             CollectionAssert.DoesNotContain(knownTypes, unknown);
         }
 
         [Test]
-        public void ResponseType_Unknown_NotReserved()
+        public void ItemType_Unknown_NotReserved()
         {
             //Given the list of reserved types from the RFC
             //the value of Uknown must not be part of them
@@ -36,149 +36,149 @@ namespace GopherLib.Test.ResponseTests
                 knownTypes.Add((char)(c + 32)); // Shift to lower case
             }
 
-            var unknown = ResponseType.Unknown;
+            var unknown = ItemType.Unknown;
 
             CollectionAssert.DoesNotContain(knownTypes, unknown);
         }
 
         [Test]
-        public void ResponseType_Zero_IsFile()
+        public void ItemType_Zero_IsFile()
         {
             const char responseCode = '0';
 
-            var responseType = (ResponseType)responseCode;
+            var itemType = (ItemType)responseCode;
 
-            Assert.AreEqual(ResponseType.File, responseType);
+            Assert.AreEqual(ItemType.File, itemType);
         }
 
         [Test]
-        public void ResponseType_One_IsDirectory()
+        public void ItemType_One_IsDirectory()
         {
             const char responseCode = '1';
 
-            var responseType = (ResponseType)responseCode;
+            var itemType = (ItemType)responseCode;
 
-            Assert.AreEqual(ResponseType.Directory, responseType);
+            Assert.AreEqual(ItemType.Directory, itemType);
         }
 
         [Test]
-        public void ResponseType_Two_IsPhoneBook()
+        public void ItemType_Two_IsPhoneBook()
         {
             const char responseCode = '2';
 
-            var responseType = (ResponseType)responseCode;
+            var itemType = (ItemType)responseCode;
 
-            Assert.AreEqual(ResponseType.PhoneBook, responseType);
+            Assert.AreEqual(ItemType.PhoneBook, itemType);
         }
 
         [Test]
-        public void ResponseType_Three_IsError()
+        public void ItemType_Three_IsError()
         {
             const char responseCode = '3';
 
-            var responseType = (ResponseType)responseCode;
+            var itemType = (ItemType)responseCode;
 
-            Assert.AreEqual(ResponseType.Error, responseType);
+            Assert.AreEqual(ItemType.Error, itemType);
         }
 
         [Test]
-        public void ResponseType_Four_IsBinHexed()
+        public void ItemType_Four_IsBinHexed()
         {
             const char responseCode = '4';
 
-            var responseType = (ResponseType)responseCode;
+            var itemType = (ItemType)responseCode;
 
-            Assert.AreEqual(ResponseType.BinHexed, responseType);
+            Assert.AreEqual(ItemType.BinHexed, itemType);
         }
 
         [Test]
-        public void ResponseType_Five_IsDOSBinary()
+        public void ItemType_Five_IsDOSBinary()
         {
             const char responseCode = '5';
 
-            var responseType = (ResponseType)responseCode;
+            var itemType = (ItemType)responseCode;
 
-            Assert.AreEqual(ResponseType.DOSBinary, responseType);
+            Assert.AreEqual(ItemType.DOSBinary, itemType);
         }
 
         [Test]
-        public void ResponseType_Six_IsUUEncoded()
+        public void ItemType_Six_IsUUEncoded()
         {
             const char responseCode = '6';
 
-            var responseType = (ResponseType)responseCode;
+            var itemType = (ItemType)responseCode;
 
-            Assert.AreEqual(ResponseType.UUEncoded, responseType);
+            Assert.AreEqual(ItemType.UUEncoded, itemType);
         }
 
         [Test]
-        public void ResponseType_Seven_IsIndexSearch()
+        public void ItemType_Seven_IsIndexSearch()
         {
             const char responseCode = '7';
 
-            var responseType = (ResponseType)responseCode;
+            var itemType = (ItemType)responseCode;
 
-            Assert.AreEqual(ResponseType.IndexSearch, responseType);
+            Assert.AreEqual(ItemType.IndexSearch, itemType);
         }
 
         [Test]
-        public void ResponseType_Eight_IsTelnet()
+        public void ItemType_Eight_IsTelnet()
         {
             const char responseCode = '8';
 
-            var responseType = (ResponseType)responseCode;
+            var itemType = (ItemType)responseCode;
 
-            Assert.AreEqual(ResponseType.Telnet, responseType);
+            Assert.AreEqual(ItemType.Telnet, itemType);
         }
 
         [Test]
-        public void ResponseType_Nine_IsBinary()
+        public void ItemType_Nine_IsBinary()
         {
             const char responseCode = '9';
 
-            var responseType = (ResponseType)responseCode;
+            var itemType = (ItemType)responseCode;
 
-            Assert.AreEqual(ResponseType.Binary, responseType);
+            Assert.AreEqual(ItemType.Binary, itemType);
         }
 
         [Test]
-        public void ResponseType_Plus_IsRedundantServer()
+        public void ItemType_Plus_IsRedundantServer()
         {
             const char responseCode = '+';
 
-            var responseType = (ResponseType)responseCode;
+            var itemType = (ItemType)responseCode;
 
-            Assert.AreEqual(ResponseType.RedundantServer, responseType);
+            Assert.AreEqual(ItemType.RedundantServer, itemType);
         }
 
         [Test]
-        public void ResponseType_UpperT_IsTN3270()
+        public void ItemType_UpperT_IsTN3270()
         {
             const char responseCode = 'T';
 
-            var responseType = (ResponseType)responseCode;
+            var itemType = (ItemType)responseCode;
 
-            Assert.AreEqual(ResponseType.TN3270, responseType);
+            Assert.AreEqual(ItemType.TN3270, itemType);
         }
 
         [Test]
-        public void ResponseType_LowerG_IsGIF()
+        public void ItemType_LowerG_IsGIF()
         {
             const char responseCode = 'g';
 
-            var responseType = (ResponseType)responseCode;
+            var itemType = (ItemType)responseCode;
 
-            Assert.AreEqual(ResponseType.GIF, responseType);
+            Assert.AreEqual(ItemType.GIF, itemType);
         }
 
         [Test]
-        public void ResponseType_UpperI_IsImage()
+        public void ItemType_UpperI_IsImage()
         {
             const char responseCode = 'I';
 
-            var responseType = (ResponseType)responseCode;
+            var itemType = (ItemType)responseCode;
 
-            Assert.AreEqual(ResponseType.Image, responseType);
+            Assert.AreEqual(ItemType.Image, itemType);
         }
     }
 }

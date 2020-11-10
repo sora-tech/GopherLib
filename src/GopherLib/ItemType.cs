@@ -1,6 +1,6 @@
 ﻿namespace GopherLib
 {
-    public enum ResponseType
+    public enum ItemType
     {
         Unknown = -1,
         File = '0',

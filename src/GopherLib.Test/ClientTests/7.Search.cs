@@ -150,7 +150,7 @@ namespace GopherLib.Test.ClientTests
             var response = data[1];
             Assert.IsNotNull(response);
 
-            Assert.AreEqual(ResponseType.PhoneBook, response.Type);
+            Assert.AreEqual(ItemType.PhoneBook, response.Type);
         }
 
         [Test]
@@ -169,7 +169,7 @@ namespace GopherLib.Test.ClientTests
             var response = data[0];
             Assert.IsNotNull(response);
 
-            Assert.AreEqual(ResponseType.Directory, response.Type);
+            Assert.AreEqual(ItemType.Directory, response.Type);
         }
     }
 }
