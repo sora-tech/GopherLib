@@ -43,7 +43,7 @@ namespace GopherLib.Integration.Test
             thread.Start(server);
 
             var client = new Client(new Uri("gopher://localhost"));
-            var tcpClient = new SimpleConnection(new TcpConnection());
+            var tcpClient = new Simple(new TcpConnection());
 
             var result = client.Binary(tcpClient, "/data");
 

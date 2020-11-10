@@ -16,7 +16,7 @@ namespace GopherLib.Test.ConnectionTests
             var tcpClient = Substitute.For<ITcpConnection>();
             tcpClient.Connected.Returns(false);
             
-            var tcp = new SimpleConnection(tcpClient);
+            var tcp = new Simple(tcpClient);
 
             var result = tcp.Open("", 0);
 
@@ -29,7 +29,7 @@ namespace GopherLib.Test.ConnectionTests
             var tcpClient = Substitute.For<ITcpConnection>();
             tcpClient.Connected.Returns(true);
 
-            var tcp = new SimpleConnection(tcpClient);
+            var tcp = new Simple(tcpClient);
 
             var result = tcp.Open("", 0);
 
@@ -42,7 +42,7 @@ namespace GopherLib.Test.ConnectionTests
             var tcpClient = Substitute.For<ITcpConnection>();
             tcpClient.When(c => c.Connect(Arg.Any<string>(), Arg.Any<int>())).Do((x) => throw new Exception());
 
-            var tcp = new SimpleConnection(tcpClient);
+            var tcp = new Simple(tcpClient);
 
             var result = tcp.Open("", 0);
 

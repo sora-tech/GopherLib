@@ -10,13 +10,13 @@ namespace Gopher.Cli
         {
             Console.Title = "Gopher!";
 
-            var uri = new Uri("gopher://gopher.floodgap.com");
+            var uri = new Uri("gopher://sdf.org");
 
             var client = new Client(uri);
 
-            var connection = new SimpleConnection(new TcpConnection());
+            var connection = new Simple(new TcpConnection());
 
-            var response = client.Search(connection, "/v2/vs", "sdf");
+            var response = client.Menu(connection, "");
 
             foreach (var item in response)
             {

@@ -23,7 +23,7 @@ namespace GopherLib.Test.ConnectionTests
         [Test]
         public void Request_WithoutOpen_Throws()
         {
-            var tcp = new SimpleConnection(tcpClient);
+            var tcp = new Simple(tcpClient);
 
             Assert.Throws<Exception>(() => tcp.Request(""));
         }
@@ -31,7 +31,7 @@ namespace GopherLib.Test.ConnectionTests
         [Test]
         public void Request_ListInfo_SendsListCommand()
         {
-            var tcp = new SimpleConnection(tcpClient);
+            var tcp = new Simple(tcpClient);
             var stream = new MemoryStream();
             
             tcpClient.Connected.Returns(true);
@@ -56,7 +56,7 @@ namespace GopherLib.Test.ConnectionTests
         public void Request_ListInfo_ReturnsResponse()
         {
             var testClient = new TestRequestClient();
-            var tcp = new SimpleConnection(testClient);
+            var tcp = new Simple(testClient);
 
             tcp.Open("", 0);
 

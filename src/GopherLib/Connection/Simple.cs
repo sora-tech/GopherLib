@@ -4,12 +4,12 @@ using System.Text;
 
 namespace GopherLib
 {
-    public class SimpleConnection : IConnection
+    public class Simple : IConnection
     {
         private readonly ITcpConnection client;
         private bool open = false;
 
-        public SimpleConnection(ITcpConnection client)
+        public Simple(ITcpConnection client)
         {
             this.client = client;
         }

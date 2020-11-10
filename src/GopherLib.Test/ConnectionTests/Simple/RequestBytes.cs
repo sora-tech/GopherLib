@@ -23,7 +23,7 @@ namespace GopherLib.Test.ConnectionTests
         [Test]
         public void BinaryRequest_WithoutOpen_Throws()
         {
-            var tcp = new SimpleConnection(tcpClient);
+            var tcp = new Simple(tcpClient);
 
             Assert.Throws<Exception>(() => tcp.RequestBytes(""));
         }
@@ -31,7 +31,7 @@ namespace GopherLib.Test.ConnectionTests
         [Test]
         public void RequestBytes_Selector_SendsSelectorValue()
         {
-            var tcp = new SimpleConnection(tcpClient);
+            var tcp = new Simple(tcpClient);
             var stream = new MemoryStream();
             
             tcpClient.Connected.Returns(true);
@@ -57,7 +57,7 @@ namespace GopherLib.Test.ConnectionTests
         {
             var testClient = new TestClient();
 
-            var tcp = new SimpleConnection(testClient);
+            var tcp = new Simple(testClient);
 
 
             tcp.Open("", 0);
@@ -72,7 +72,7 @@ namespace GopherLib.Test.ConnectionTests
         {
             var testClient = new TestClient();
 
-            var tcp = new SimpleConnection(testClient);
+            var tcp = new Simple(testClient);
 
             testClient.data = new byte[2048];
             testClient.data[5] = 70;

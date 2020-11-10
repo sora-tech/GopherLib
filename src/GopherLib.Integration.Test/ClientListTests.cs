@@ -33,7 +33,8 @@ namespace GopherLib.Integration.Test
             var tcpResponse = Encoding.ASCII.GetBytes("0Test Display\tSelector Text\tDomain Info\t71" + Environment.NewLine + ".");
             stream.Write(tcpResponse);
             stream.Flush();
-            
+
+            stream.Close();
         }
 
         [Test]
@@ -44,7 +45,7 @@ namespace GopherLib.Integration.Test
             thread.Start(server);
 
             var client = new Client(new Uri("gopher://localhost"));
-            var tcpClient = new SimpleConnection(new TcpConnection());
+            var tcpClient = new Simple(new TcpConnection());
 
             var result = client.Menu(tcpClient, "/");
 
