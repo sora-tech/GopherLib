@@ -65,7 +65,7 @@ namespace GopherLib.Test.ConnectionTests.AsyncClient
             var result = await connection.RequestBytesAsync("info");
 
             Assert.AreEqual(testClient.data.Length, result.Length);
-            Assert.AreEqual(testClient.data, result);
+            Assert.AreEqual(testClient.data, result.ToArray());
         }
 
         [Test]
@@ -83,8 +83,8 @@ namespace GopherLib.Test.ConnectionTests.AsyncClient
             var result = await connection.RequestBytesAsync("info");
 
             Assert.AreEqual(2048, result.Length);
-            Assert.AreEqual(70, result[5]);
-            Assert.AreEqual(10, result[2000]);
+            Assert.AreEqual(70, result.Slice(5).Span[0]);
+            Assert.AreEqual(10, result.Slice(2000).Span[0]);
         }
     }
 

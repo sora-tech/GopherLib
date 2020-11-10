@@ -12,6 +12,6 @@ namespace GopherLib
         Task<string> RequestAsync(string path);
 
         Span<byte> RequestBytes(string path);
-        Task<byte[]> RequestBytesAsync(string path);
+        Task<Memory<byte>> RequestBytesAsync(string path);
     }
 }

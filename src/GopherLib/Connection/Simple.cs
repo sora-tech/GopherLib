@@ -92,7 +92,7 @@ namespace GopherLib.Connection
             return data[0..size];
         }
 
-        public Task<byte[]> RequestBytesAsync(string path)
+        public Task<Memory<byte>> RequestBytesAsync(string path)
         {
             throw new NotImplementedException();
         }

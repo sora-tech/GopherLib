@@ -121,7 +121,7 @@ namespace GopherLib.Test.ClientTests
             return new byte[2] { 1, 2 };
         }
 
-        public Task<byte[]> RequestBytesAsync(string path)
+        public Task<Memory<byte>> RequestBytesAsync(string path)
         {
             throw new NotImplementedException();
         }

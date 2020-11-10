@@ -35,7 +35,7 @@ namespace GopherLib.Connection
         {
             var data = await RequestBytesAsync(path);
 
-            var result = new string(Encoding.ASCII.GetChars(data));
+            var result = new string(Encoding.ASCII.GetChars(data.ToArray()));
 
             return result;
         }
@@ -45,7 +45,7 @@ namespace GopherLib.Connection
             throw new NotImplementedException();
         }
 
-        public async Task<byte[]> RequestBytesAsync(string path)
+        public async Task<Memory<byte>> RequestBytesAsync(string path)
         {
             if(this.connection.Connected != true)
             {
