@@ -2,13 +2,13 @@
 using GopherLib.Facade;
 using System;
 
-namespace Gopher.Console
+namespace Gopher.Cli
 {
     class Program
     {
         static void Main(string[] args)
         {
-            System.Console.Title = "Gopher!";
+            Console.Title = "Gopher!";
 
             var uri = new Uri("gopher://sdf.org");
 
@@ -20,10 +20,10 @@ namespace Gopher.Console
 
             foreach (var item in response)
             {
-                System.Console.WriteLine($"{item.Type}, {item.Display} - {item.Selector}");
+                Console.WriteLine($"{item.Type}, {item.Display} - {item.Selector}");
             }
 
-            System.Console.ReadLine();
+            Console.ReadLine();
         }
     }
 }

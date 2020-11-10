@@ -22,7 +22,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GopherLib.Test", "GopherLib
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GopherLib.Integration.Test", "GopherLib.Integration.Test\GopherLib.Integration.Test.csproj", "{2BCB0DC2-1174-4CA9-AC19-201597C38095}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gopher.Console", "Gopher.Console\Gopher.Console.csproj", "{ED36150F-6CDD-428E-9DF1-0963830E4143}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gopher.Cli", "Gopher.Cli\Gopher.Cli.csproj", "{ED36150F-6CDD-428E-9DF1-0963830E4143}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
