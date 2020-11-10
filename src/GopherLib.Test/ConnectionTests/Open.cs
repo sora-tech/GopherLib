@@ -1,7 +1,5 @@
-﻿using GopherLib;
-using GopherLib.Facade;
+﻿using GopherLib.Facade;
 using NSubstitute;
-using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 using System;
 using System.Diagnostics.CodeAnalysis;

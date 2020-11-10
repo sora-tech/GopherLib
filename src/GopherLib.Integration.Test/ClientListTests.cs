@@ -1,4 +1,3 @@
-using GopherLib;
 using GopherLib.Facade;
 using NUnit.Framework;
 using System;

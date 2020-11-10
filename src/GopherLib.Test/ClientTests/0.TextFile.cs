@@ -1,5 +1,4 @@
-﻿using GopherLib;
-using NSubstitute;
+﻿using NSubstitute;
 using NUnit.Framework;
 using System;
 using System.Diagnostics.CodeAnalysis;

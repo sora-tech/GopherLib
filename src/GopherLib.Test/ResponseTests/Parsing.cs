@@ -1,5 +1,4 @@
-﻿using GopherLib;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System.Diagnostics.CodeAnalysis;
 
 namespace GopherLib.Test.ResponseTests

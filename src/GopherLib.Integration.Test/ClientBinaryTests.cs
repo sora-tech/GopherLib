@@ -1,11 +1,9 @@
-using GopherLib;
 using GopherLib.Facade;
 using NUnit.Framework;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
 
 namespace GopherLib.Integration.Test

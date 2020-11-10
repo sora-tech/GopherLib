@@ -1,6 +1,5 @@
 ﻿using NUnit.Framework;
 using System.Diagnostics.CodeAnalysis;
-using GopherLib;
 
 namespace GopherLib.Test.ResponseTests
 {

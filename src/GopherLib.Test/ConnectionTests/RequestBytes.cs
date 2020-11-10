@@ -1,5 +1,4 @@
-﻿using GopherLib;
-using GopherLib.Facade;
+﻿using GopherLib.Facade;
 using NSubstitute;
 using NUnit.Framework;
 using System;
