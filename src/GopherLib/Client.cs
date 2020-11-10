@@ -92,7 +92,7 @@ namespace GopherLib
                 return new List<Response>();
             }
 
-            var response = connection.Request($"{selector}\t{term}");
+            var response = connection.Request($"{selector}\t{term}{terminator}");
 
             return ParseResponse(response);
         }

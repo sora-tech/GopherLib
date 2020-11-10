@@ -1,5 +1,4 @@
-﻿using GopherLib;
-using NSubstitute;
+﻿using NSubstitute;
 using NUnit.Framework;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -63,7 +62,7 @@ namespace GopherLib.Test.ClientTests
         }
 
         [Test]
-        public void Search_TermPopulated_RequestsSearch()
+        public void Search_TermPopulated_RequestsUNASCII()
         {
             var client = new Client(new Uri("gopher://example.com"));
             var selector = "";
@@ -71,7 +70,7 @@ namespace GopherLib.Test.ClientTests
 
             client.Search(connectionSuccess, selector, search);
 
-            connectionSuccess.Received(1).Request(Arg.Is("\tterm"));
+            connectionSuccess.Received(1).Request(Arg.Is("\tterm\t\r\n\0"));
         }
 
         [Test]
