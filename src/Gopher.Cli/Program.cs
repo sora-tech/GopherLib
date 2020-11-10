@@ -1,4 +1,5 @@
 ﻿using GopherLib;
+using GopherLib.Connection;
 using GopherLib.Facade;
 using System;
 

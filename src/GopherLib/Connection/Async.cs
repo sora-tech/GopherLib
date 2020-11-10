@@ -5,60 +5,58 @@ using System.Threading.Tasks;
 
 namespace GopherLib.Connection
 {
-    public class Simple : IConnection
+    public class Async : IConnection
     {
-        private readonly ITcpConnection client;
-        private bool open = false;
+        private readonly ITcpConnection connection;
 
-        public Simple(ITcpConnection client)
+        public Async(ITcpConnection connection)
         {
-            this.client = client;
+            this.connection = connection;
         }
 
         public bool Open(string domain, int port)
         {
-            try
-            {
-                client.Connect(domain, port);
-                open = client.Connected;
-            }
-            catch { }   //Fail silently as no logging is implemented
-
-            return open;
+            throw new NotImplementedException();
         }
 
-        public Task<bool> OpenAsync(string domain, int port)
+        public async Task<bool> OpenAsync(string domain, int port)
         {
-            throw new NotImplementedException();
+            await connection.ConnectAsync(domain, port);
+
+            return connection.Connected;
         }
 
         public string Request(string path)
         {
-            var data = RequestBytes(path);
-
-            var result = new string(Encoding.ASCII.GetChars(data.ToArray()));
-            
-            return result;
+            throw new NotImplementedException();
         }
 
-        public Task<string> RequestAsync(string path)
+        public async Task<string> RequestAsync(string path)
         {
-            throw new NotImplementedException();
+            var data = await RequestBytesAsync(path);
+
+            var result = new string(Encoding.ASCII.GetChars(data));
+
+            return result;
         }
 
         public Span<byte> RequestBytes(string path)
         {
-            if (open == false)
+            throw new NotImplementedException();
+        }
+
+        public async Task<byte[]> RequestBytesAsync(string path)
+        {
+            if(this.connection.Connected != true)
             {
                 throw new Exception();
             }
 
-            var stream = client.GetStream();
+            var stream = connection.GetStream();
 
             var pathBytes = Encoding.ASCII.GetBytes(path);
-
-            stream.Write(pathBytes, 0, pathBytes.Length);
-            stream.Flush();
+            await stream.WriteAsync(pathBytes, 0, pathBytes.Length);
+            await stream.FlushAsync();
 
             var buffer = new byte[1024];
             var data = new byte[1024];
@@ -68,7 +66,7 @@ namespace GopherLib.Connection
             {
                 try
                 {
-                    read = stream.Read(buffer, 0, 1024);
+                    read = await stream.ReadAsync(buffer, 0, 1024);
                     buffer.CopyTo(data, size);
                     size += read;
                 }
@@ -90,11 +88,6 @@ namespace GopherLib.Connection
             } while (read != 0);
 
             return data[0..size];
-        }
-
-        public Task<byte[]> RequestBytesAsync(string path)
-        {
-            throw new NotImplementedException();
         }
     }
 }

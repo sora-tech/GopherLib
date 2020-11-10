@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
 
 namespace GopherLib.Facade
 {
@@ -7,6 +8,8 @@ namespace GopherLib.Facade
         bool Connected { get; }
 
         void Connect(string domain, int port);
+
+        Task ConnectAsync(string domain, int port);
 
         Stream GetStream();
     }

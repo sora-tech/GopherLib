@@ -1,12 +1,14 @@
-﻿using GopherLib.Facade;
+﻿using GopherLib.Connection;
+using GopherLib.Facade;
 using NSubstitute;
 using NUnit.Framework;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace GopherLib.Test.ConnectionTests
+namespace GopherLib.Test.ConnectionTests.SimpleClient
 {
     [TestFixture]
     [ExcludeFromCodeCoverage]
@@ -74,6 +76,11 @@ namespace GopherLib.Test.ConnectionTests
 
         public void Connect(string domain, int port)
         {
+        }
+
+        public Task ConnectAsync(string domain, int port)
+        {
+            throw new NotImplementedException();
         }
 
         public Stream GetStream()

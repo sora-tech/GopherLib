@@ -1,10 +1,11 @@
-﻿using GopherLib.Facade;
+﻿using GopherLib.Connection;
+using GopherLib.Facade;
 using NSubstitute;
 using NUnit.Framework;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace GopherLib.Test.ConnectionTests
+namespace GopherLib.Test.ConnectionTests.SimpleClient
 {
     [TestFixture]
     [ExcludeFromCodeCoverage]

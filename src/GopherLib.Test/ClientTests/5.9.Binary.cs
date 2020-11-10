@@ -3,6 +3,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 
 namespace GopherLib.Test.ClientTests
 {
@@ -99,15 +100,30 @@ namespace GopherLib.Test.ClientTests
             return ShouldOpen;
         }
 
+        public Task<bool> OpenAsync(string domain, int port)
+        {
+            throw new NotImplementedException();
+        }
+
         public string Request(string path)
         {
             return string.Empty;
+        }
+
+        public Task<string> RequestAsync(string path)
+        {
+            throw new NotImplementedException();
         }
 
         public Span<byte> RequestBytes(string path)
         {
             BytesPath.Add(path);
             return new byte[2] { 1, 2 };
+        }
+
+        public Task<byte[]> RequestBytesAsync(string path)
+        {
+            throw new NotImplementedException();
         }
     }
 }
