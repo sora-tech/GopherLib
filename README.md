@@ -43,4 +43,4 @@ Next was updating the NSubstitute mocks to deliver `Span<byte>` when required.  
 This error is due to the special implementation of `Span<T>` only existing on the stack. Looking through the documentation and searching for usages of `Span<T>` with NSubstitute turned up nothing despite the latest release being sometime in 2019.  There were some results about Moq possibly supporting it so I decided to try that but unfortunately ended up with a similar problem:
 > CS8640 Expression tree cannot contain value of ref struct or restricted type 'Span'
 
-Moq 5 may change this but until then it seems `Span<T>` will be a problem for testing for strict TDD projects may be unusable.
+Finally I realized that these frameworks are to help create mock objects but are not the only way.  Creating a normal C# object that implements an interface is the simplest way to solve this problem and has no limitations on what it returns.  I created several small concrete mocks which could return known data as required and this allowed testing to be done.
