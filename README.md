@@ -44,3 +44,12 @@ This error is due to the special implementation of `Span<T>` only existing on th
 > CS8640 Expression tree cannot contain value of ref struct or restricted type 'Span'
 
 Finally I realized that these frameworks are to help create mock objects but are not the only way.  Creating a normal C# object that implements an interface is the simplest way to solve this problem and has no limitations on what it returns.  I created several small concrete mocks which could return known data as required and this allowed testing to be done.
+
+### Streams
+Testing with `Stream` is never quite the same as using them thanks to the many different implementations.  A `MemoryStream` for testing gives much more flexability when compared to a `NetworkStream` found in operation.
+
+This initially lead to writing code that passed tests but threw exceptions in use as `NetworkStream` do not support arbitary acess.  The initial response is to re-write the code as required to both pass the tests and real usage but this undermines the goal of testing.  I could use the same approach and create a Facade around `MemoryStream` that only exposed the access found on a `NetworkStream` but this would still not provide a realistic environment for the tests compared to actual use.  Instead I decided to advance from Unit testing and move to Integration testing.
+
+Integration testing covers a wide range of environments including software self-testing all the way out to multiple real machines running together.  For testing Streams all of these options are useful but trade realisim for complexity.  In this case moving to self-hosted tests that use more realistic Stream behaviour is the goal.
+
+The end result was using real `Thread` in a test that created a `TcpListner` and used the complete `Client` stack with a corresponding real `TcpConnection`.  This produced a real `NetworkStream` between the two at the cost of a much slower test.  Typical unit tests run in miliseconds but each one of these tests took a second or more to complete.  Using real `NetworkStream` connections did make a number of issues visible that had not been apparent from the unit tests.
