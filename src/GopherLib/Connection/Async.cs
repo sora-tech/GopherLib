@@ -1,5 +1,6 @@
 ﻿using GopherLib.Facade;
 using System;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -75,13 +76,24 @@ namespace GopherLib.Connection
                     break;
                 }
 
-                if(read > 0)
+                if (read > 0)
                 {
                     var temp = new byte[data.Length];
                     data.CopyTo(temp, 0);
 
                     data = new byte[data.Length + size];
                     temp.CopyTo(data, 0);
+                }
+
+                // read enough to contain terminator sequence
+                if (read > 3)
+                {
+                    var terminator = new byte[3] { (int)'\r', (int)'\n', (int)'.' };
+                    var end = data[(read - 3)..read];
+                    if (Enumerable.SequenceEqual(end, terminator))
+                    {
+                        break;
+                    }
                 }
 
             } while (read != 0);

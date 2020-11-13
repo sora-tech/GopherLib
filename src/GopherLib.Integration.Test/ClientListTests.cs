@@ -53,5 +53,44 @@ namespace GopherLib.Integration.Test
             Assert.IsNotEmpty(result);
             Assert.AreEqual(1, result.Count);
         }
+
+        private void RunHangingServer(object serverObject)
+        {
+            var server = serverObject as TcpListener;
+
+            server.Start();
+
+            var client = server.AcceptTcpClient();
+
+            var stream = client.GetStream();
+
+            // Read the path selector from the stream
+            // and discard it for this test
+            var read = new byte[1024];
+            stream.Read(read, 0, 1);
+            stream.Flush();
+
+            var tcpResponse = Encoding.ASCII.GetBytes("0Test Display\tSelector Text\tDomain Info\t71" + Environment.NewLine + ".");
+            stream.Write(tcpResponse);
+            stream.Flush();
+        }
+
+        [Test]
+        //[Timeout(2000)]
+        //Test will hang forever if not correct
+        public void ClientList_WithoutClose_ReturnsData()
+        {
+            var server = new TcpListener(IPAddress.Loopback, 70);
+            var thread = new Thread(RunHangingServer);
+            thread.Start(server);
+
+            var client = new Client(new Uri("gopher://localhost"));
+            var tcpClient = new Simple(new TcpConnection());
+
+            var result = client.Menu(tcpClient, "/");
+
+            Assert.IsNotEmpty(result);
+            Assert.AreEqual(1, result.Count);
+        }
     }
 }
