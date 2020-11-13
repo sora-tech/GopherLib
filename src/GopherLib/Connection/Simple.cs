@@ -77,12 +77,12 @@ namespace GopherLib.Connection
                     break;
                 }
 
-                if (size >= data.Length)
+                if (read > 0)
                 {
                     var temp = new byte[data.Length];
                     data.CopyTo(temp, 0);
 
-                    data = new byte[data.Length + 1024];
+                    data = new byte[data.Length + size];
                     temp.CopyTo(data, 0);
                 }
 

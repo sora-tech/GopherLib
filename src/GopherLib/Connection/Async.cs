@@ -47,7 +47,7 @@ namespace GopherLib.Connection
 
         public async Task<Memory<byte>> RequestBytesAsync(string path)
         {
-            if(this.connection.Connected != true)
+            if (this.connection.Connected != true)
             {
                 throw new Exception();
             }
@@ -75,15 +75,14 @@ namespace GopherLib.Connection
                     break;
                 }
 
-                if (size >= data.Length)
+                if(read > 0)
                 {
                     var temp = new byte[data.Length];
                     data.CopyTo(temp, 0);
 
-                    data = new byte[data.Length + 1024];
+                    data = new byte[data.Length + size];
                     temp.CopyTo(data, 0);
                 }
-
 
             } while (read != 0);
 
