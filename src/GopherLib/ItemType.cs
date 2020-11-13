@@ -16,6 +16,7 @@
         RedundantServer = '+',
         TN3270 = 'T',
         GIF = 'g',
-        Image = 'I'
+        Image = 'I',
+        Info = 'i'
     }
 }
