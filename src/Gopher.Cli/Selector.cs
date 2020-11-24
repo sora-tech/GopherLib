@@ -17,6 +17,7 @@ namespace Gopher.Cli
         }
 
         public int Line { get; private set; }
+        public Response Selected => responses[Line];
 
         public void Draw(IConsole console)
         {

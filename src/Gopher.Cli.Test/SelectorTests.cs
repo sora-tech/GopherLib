@@ -140,5 +140,27 @@ namespace Gopher.Cli.Test
             Assert.AreEqual(0, selector.Line);
         }
 
+        [Test]
+        public void Selector_Selected_HasResponse()
+        {
+            var selector = new Selector(new List<Response> { new Response("iTest Display\tFirst\tDomain Info\t71"), new Response("iTest Display\tSecond\tDomain Info\t71") }, 40);
+
+            var selected = selector.Selected;
+
+            Assert.IsNotNull(selected);
+            Assert.AreEqual("First", selected.Selector);
+        }
+
+        [Test]
+        public void Selector_SelectedMoved_IsValue()
+        {
+            var selector = new Selector(new List<Response> { new Response("iTest Display\tFirst\tDomain Info\t71"), new Response("iTest Display\tSecond\tDomain Info\t71") }, 40);
+
+            selector.ReadKey(new ConsoleKeyInfo('0', ConsoleKey.DownArrow, false, false, false));
+            var selected = selector.Selected;
+
+            Assert.IsNotNull(selected);
+            Assert.AreEqual("Second", selected.Selector);
+        }
     }
 }
