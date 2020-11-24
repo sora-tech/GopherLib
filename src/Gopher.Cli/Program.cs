@@ -11,6 +11,12 @@ namespace Gopher.Cli
         {
             Console.Title = "Gopher!";
 
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.BufferHeight = Console.WindowHeight;
+            Console.CursorVisible = false;
+            var width = Console.WindowWidth - 1;
+
+
             var uri = new Uri("gopher://sdf.org");
 
             var client = new Client(uri);
@@ -19,13 +25,17 @@ namespace Gopher.Cli
 
             var response = client.Menu(connection, "");
 
-            foreach (var item in response)
-            {
-                var print = new Display(item);
-                Console.WriteLine(print.Print());
-            }
+            var selector = new Selector(response, width);
 
-            Console.ReadLine();
+            while (true)
+            {
+                selector.Draw(new Facade.Console());
+                Console.WriteLine();
+                Console.Write($"server: {uri}");
+
+                var key = Console.ReadKey(true);
+                selector.ReadKey(key);
+            }
         }
     }
 }

@@ -11,20 +11,24 @@ namespace Gopher.Cli
             this.response = response;
         }
 
-        public string Print()
+        public string Print(int width)
         {
             if (response == null)
             {
                 response = new Response("");
             }
 
+            var empty = new string(' ', width);
+            string val = "";
+
             switch (response.Type)
             {
                 case ItemType.Unknown:
-                    return string.Empty;
+                    return empty;
                 case ItemType.File:
                 case ItemType.Directory:
-                    return $"{(char)response.Type} {response.Display} : {response.Domain}";
+                    val = $"{(char)response.Type} {response.Display} : {response.Domain}";
+                    break;
                 case ItemType.PhoneBook:
                     break;
                 case ItemType.Error:
@@ -33,11 +37,13 @@ namespace Gopher.Cli
                     break;
                 case ItemType.Binary:
                 case ItemType.DOSBinary:
-                    return $"{(char)response.Type} {response.Display} : {response.Domain}";
+                    val = $"{(char)response.Type} {response.Display} : {response.Domain}";
+                    break;
                 case ItemType.UUEncoded:
                     break;
                 case ItemType.IndexSearch:
-                    return $"{(char)response.Type} {response.Display} : {response.Domain}";
+                    val = $"{(char)response.Type} {response.Display} : {response.Domain}";
+                    break;
                 case ItemType.Telnet:
                     break;
                 case ItemType.RedundantServer:
@@ -46,14 +52,23 @@ namespace Gopher.Cli
                     break;
                 case ItemType.GIF:
                 case ItemType.Image:
-                    return $"{(char)response.Type} {response.Display} : {response.Domain}";
+                    val = $"{(char)response.Type} {response.Display} : {response.Domain}";
+                    break;
                 case ItemType.Info:
-                    return $"{(char)response.Type} {response.Display}";
+                    val= $"{(char)response.Type} {response.Display}";
+                    break;
                 default:
                     break;
             }
 
-            return string.Empty;
+            if(val.Length > width)
+            {
+                return val.Substring(0, width);
+            }
+
+            var padding = new string(' ', width - val.Length);
+
+            return val + padding;
         }
     }
 }
