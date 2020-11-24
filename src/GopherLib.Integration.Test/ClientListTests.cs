@@ -76,7 +76,7 @@ namespace GopherLib.Integration.Test
         }
 
         [Test]
-        //[Timeout(2000)]
+        [Timeout(2000)]
         //Test will hang forever if not correct
         public void ClientList_WithoutClose_ReturnsData()
         {

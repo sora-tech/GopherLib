@@ -21,7 +21,8 @@ namespace Gopher.Cli
 
             foreach (var item in response)
             {
-                Console.WriteLine($"{(char)item.Type} {item.Display} - {item.Selector}:{item.Domain}");
+                var print = new Display(item);
+                Console.WriteLine(print.Print());
             }
 
             Console.ReadLine();
