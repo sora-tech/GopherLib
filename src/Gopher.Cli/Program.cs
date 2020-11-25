@@ -1,7 +1,4 @@
-﻿using GopherLib;
-using GopherLib.Connection;
-using GopherLib.Facade;
-using System;
+﻿using System;
 
 namespace Gopher.Cli
 {
@@ -11,30 +8,24 @@ namespace Gopher.Cli
         {
             Console.Title = "Gopher!";
 
-            Console.BackgroundColor = ConsoleColor.Black;
             Console.BufferHeight = Console.WindowHeight;
             Console.CursorVisible = false;
             var width = Console.WindowWidth - 1;
 
+            var factory = new ConnectionFactory();
+            var console = new Facade.Console();
 
-            var uri = new Uri("gopher://sdf.org");
-
-            var client = new Client(uri);
-
-            var connection = new Simple(new TcpConnection());
-
-            var response = client.Menu(connection, "");
-
-            var selector = new Selector(response, width);
-
-            while (true)
+            var browser = new Browser(factory, "gopher://sdf.org")
             {
-                selector.Draw(new Facade.Console());
-                Console.WriteLine();
-                Console.Write($"server: {uri}");
+                Width = width
+            };
 
-                var key = Console.ReadKey(true);
-                selector.ReadKey(key);
+            browser.Request("");
+            browser.Draw(console);
+
+            while (browser.Input(console))
+            {
+                browser.Draw(console);
             }
         }
     }
