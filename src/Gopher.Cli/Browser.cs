@@ -14,10 +14,12 @@ namespace Gopher.Cli
         {
             Uri = new Uri(uri);
             this.connectionFactory = factory;
-            this.selector = new Scroller(new List<Response>(), this.Width);
+            this.selector = new Scroller(new List<Response>(), this.Width, this.Height - 2);
         }
 
         public int Width { get; set; } = 80;
+        public int Height{ get; set; } = 10;
+
         public Uri Uri { get; private set; }
 
         public void Request(string selector)
@@ -26,7 +28,7 @@ namespace Gopher.Cli
 
             var response = client.Menu(connectionFactory.CreateSimple(), selector);
 
-            this.selector = new Scroller(response, Width);
+            this.selector = new Scroller(response, Width, Height - 2);
         }
         public void Request(Response request)
         {
@@ -87,12 +89,15 @@ namespace Gopher.Cli
                     break;
             }
 
-            this.selector = new Scroller(response, Width);
+            this.selector = new Scroller(response, Width, Height - 2);
         }
 
         public void Draw(IConsole console)
         {
+            console.Reset();
+
             this.selector.Draw(console);
+
             console.WriteLine();
             console.Write($"server: {Uri}");
         }

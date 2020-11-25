@@ -16,7 +16,7 @@ namespace Gopher.Cli.Test
         [Test]
         public void Scroller_Default_LineZero()
         {
-            var scroller = new Scroller(new List<Response>(), 0);
+            var scroller = new Scroller(new List<Response>(), 0, 0);
 
             Assert.AreEqual(0, scroller.Line);
         }
@@ -24,7 +24,7 @@ namespace Gopher.Cli.Test
         [Test]
         public void Scroller_DrawEmpty_Empty()
         {
-            var scroller = new Scroller(new List<Response>(), 0);
+            var scroller = new Scroller(new List<Response>(), 0, 0);
             var console = Substitute.For<IConsole>();
 
             scroller.Draw(console);
@@ -33,20 +33,9 @@ namespace Gopher.Cli.Test
         }
 
         [Test]
-        public void Scroller_DrawEmpty_Resets()
-        {
-            var scroller = new Scroller(new List<Response>(), 0);
-            var console = Substitute.For<IConsole>();
-
-            scroller.Draw(console);
-
-            console.Received(1).Reset();
-        }
-
-        [Test]
         public void Scroller_DrawResponse_CropsWidth()
         {
-            var scroller = new Scroller(new List<Response> { new Response("iTest Display\tSelector Text\tDomain Info\t71") }, 10);
+            var scroller = new Scroller(new List<Response> { new Response("iTest Display\tSelector Text\tDomain Info\t71") }, 10, 1);
             var console = Substitute.For<IConsole>();
 
             scroller.Draw(console);
@@ -57,7 +46,7 @@ namespace Gopher.Cli.Test
         [Test]
         public void Scroller_DrawResponse_PadsWidth()
         {
-            var scroller = new Scroller(new List<Response> { new Response("iTest Display\tSelector Text\tDomain Info\t71") }, 40);
+            var scroller = new Scroller(new List<Response> { new Response("iTest Display\tSelector Text\tDomain Info\t71") }, 40, 1);
             var console = Substitute.For<IConsole>();
 
             scroller.Draw(console);
@@ -66,9 +55,105 @@ namespace Gopher.Cli.Test
         }
 
         [Test]
+        public void Scroller_DrawResponse_FillsEmptyLines()
+        {
+            var scroller = new Scroller(new List<Response> { new Response("iFirst Display\tSelector Text\tDomain Info\t71"), new Response("iSecond Display\tSelector Text\tDomain Info\t71") }, 40, 5);
+            var console = Substitute.For<IConsole>();
+
+            scroller.Draw(console);
+
+            // Display first 2 lines
+            console.Received(1).WriteLine(Arg.Is<string>(x => x == "i First Display                         "));
+            console.Received(1).WriteLine(Arg.Is<string>(x => x == "i Second Display                        "));
+
+            // display blank lines to fill to desired length
+            console.Received(3).WriteLine();
+
+        }
+
+        [Test]
+        public void Scroller_DrawResponse_LimitsLines()
+        {
+            var scroller = new Scroller(new List<Response> { new Response("iFirst Display\tSelector Text\tDomain Info\t71"), new Response("iSecond Display\tSelector Text\tDomain Info\t71") }, 40, 1);
+            var console = Substitute.For<IConsole>();
+
+            scroller.Draw(console);
+
+            // Display first 1 line
+            console.Received(1).WriteLine(Arg.Is<string>(x => x == "i First Display                         "));
+            console.Received(0).WriteLine(Arg.Is<string>(x => x == "i Second Display                        "));
+
+            // no blanking required
+            console.Received(0).WriteLine();
+        }
+
+        [Test]
+        public void Scroller_DrawSingleResponse_ScrollsDisplay()
+        {
+            var scroller = new Scroller(new List<Response> { new Response("iFirst Display\tSelector Text\tDomain Info\t71"), new Response("iSecond Display\tSelector Text\tDomain Info\t71") }, 40, 1);
+            var console = Substitute.For<IConsole>();
+
+            scroller.ReadKey(new ConsoleKeyInfo('0', ConsoleKey.DownArrow, false, false, false));
+            scroller.Draw(console);
+
+            Assert.AreEqual(1, scroller.Line);
+
+            // Display second 1 line
+            console.Received(0).WriteLine(Arg.Is<string>(x => x == "i First Display                         "));
+            console.Received(1).WriteLine(Arg.Is<string>(x => x == "i Second Display                        "));
+
+            // no blanking required
+            console.Received(0).WriteLine();
+        }
+
+        [Test]
+        public void Scroller_DrawTwoResponse_ScrollsDisplay()
+        {
+            var scroller = new Scroller(new List<Response> { new Response("iFirst Display\tSelector Text\tDomain Info\t71"), new Response("iSecond Display\tSelector Text\tDomain Info\t71"), new Response("iThird Display\tSelector Text\tDomain Info\t71") }, 40, 2);
+            var console = Substitute.For<IConsole>();
+
+            scroller.ReadKey(new ConsoleKeyInfo('0', ConsoleKey.DownArrow, false, false, false));
+            scroller.Draw(console);
+
+            Assert.AreEqual(1, scroller.Line);
+
+            // Display first & second line
+            console.Received(1).WriteLine(Arg.Is<string>(x => x == "i First Display                         "));
+            console.Received(1).WriteLine(Arg.Is<string>(x => x == "i Second Display                        "));
+            // Not scrolled into view
+            console.Received(0).WriteLine(Arg.Is<string>(x => x == "i Third Display                         "));
+
+            // no blanking required
+            console.Received(0).WriteLine();
+        }
+
+        [Test]
+        public void Scroller_DrawThreeResponse_ScrolledTwice_ScrollsDisplay()
+        {
+            var scroller = new Scroller(new List<Response> { new Response("iFirst Display\tSelector Text\tDomain Info\t71"), new Response("iSecond Display\tSelector Text\tDomain Info\t71"), new Response("iThird Display\tSelector Text\tDomain Info\t71") }, 40, 2);
+            var console = Substitute.For<IConsole>();
+
+            scroller.ReadKey(new ConsoleKeyInfo('0', ConsoleKey.DownArrow, false, false, false));
+            scroller.ReadKey(new ConsoleKeyInfo('0', ConsoleKey.DownArrow, false, false, false));
+            scroller.Draw(console);
+
+            Assert.AreEqual(2, scroller.Line);
+
+            // scrolled out of view
+            console.Received(0).WriteLine(Arg.Is<string>(x => x == "i First Display                         "));
+
+            // Draw second and third
+            console.Received(1).WriteLine(Arg.Is<string>(x => x == "i Second Display                        "));
+            console.Received(1).WriteLine(Arg.Is<string>(x => x == "i Third Display                         "));
+
+            // no blanking required
+            console.Received(0).WriteLine();
+        }
+
+        [Test]
         public void Scroller_DrawResponse_Hilights()
         {
-            var scroller = new Scroller(new List<Response> { new Response("iTest Display\tSelector Text\tDomain Info\t71") }, 40);
+            var scroller = new Scroller(new List<Response> { new Response("iTest Display\tSelector Text\tDomain Info\t71") }, 40, 1);
             var console = Substitute.For<IConsole>();
 
             scroller.Draw(console);
@@ -80,7 +165,7 @@ namespace Gopher.Cli.Test
         [Test]
         public void Scroller_DrawResponse_HilightNormal()
         {
-            var scroller = new Scroller(new List<Response> { new Response("iTest Display\tSelector Text\tDomain Info\t71"), new Response("iTest Display\tSelector Text\tDomain Info\t71") }, 40);
+            var scroller = new Scroller(new List<Response> { new Response("iTest Display\tSelector Text\tDomain Info\t71"), new Response("iTest Display\tSelector Text\tDomain Info\t71") }, 40, 2);
             var console = Substitute.For<IConsole>();
 
             scroller.Draw(console);
@@ -92,7 +177,7 @@ namespace Gopher.Cli.Test
         [Test]
         public void Scroller_ReadKey_DownIncreasesLine()
         {
-            var scroller = new Scroller(new List<Response> { new Response("iTest Display\tSelector Text\tDomain Info\t71"), new Response("iTest Display\tSelector Text\tDomain Info\t71") }, 40);
+            var scroller = new Scroller(new List<Response> { new Response("iTest Display\tSelector Text\tDomain Info\t71"), new Response("iTest Display\tSelector Text\tDomain Info\t71") }, 40, 3);
             
             scroller.ReadKey(new ConsoleKeyInfo('0', ConsoleKey.DownArrow, false, false, false));
 
@@ -102,7 +187,7 @@ namespace Gopher.Cli.Test
         [Test]
         public void Scroller_ReadKey_DownStopsAtLength()
         {
-            var scroller = new Scroller(new List<Response> { new Response("iTest Display\tSelector Text\tDomain Info\t71"), new Response("iTest Display\tSelector Text\tDomain Info\t71") }, 40);
+            var scroller = new Scroller(new List<Response> { new Response("iTest Display\tSelector Text\tDomain Info\t71"), new Response("iTest Display\tSelector Text\tDomain Info\t71") }, 40, 3);
 
             scroller.ReadKey(new ConsoleKeyInfo('0', ConsoleKey.DownArrow, false, false, false));
             scroller.ReadKey(new ConsoleKeyInfo('0', ConsoleKey.DownArrow, false, false, false));
@@ -115,7 +200,7 @@ namespace Gopher.Cli.Test
         [Test]
         public void Scroller_ReadKey_UpDeIncreasesLine()
         {
-            var scroller = new Scroller(new List<Response> { new Response("iTest Display\tSelector Text\tDomain Info\t71"), new Response("iTest Display\tSelector Text\tDomain Info\t71") }, 40);
+            var scroller = new Scroller(new List<Response> { new Response("iTest Display\tSelector Text\tDomain Info\t71"), new Response("iTest Display\tSelector Text\tDomain Info\t71") }, 40, 3);
 
             scroller.ReadKey(new ConsoleKeyInfo('0', ConsoleKey.DownArrow, false, false, false));
 
@@ -130,7 +215,7 @@ namespace Gopher.Cli.Test
         [Test]
         public void Scroller_ReadKey_UpStopsAtZero()
         {
-            var scroller = new Scroller(new List<Response> { new Response("iTest Display\tSelector Text\tDomain Info\t71"), new Response("iTest Display\tSelector Text\tDomain Info\t71") }, 40);
+            var scroller = new Scroller(new List<Response> { new Response("iTest Display\tSelector Text\tDomain Info\t71"), new Response("iTest Display\tSelector Text\tDomain Info\t71") }, 40, 3);
 
             scroller.ReadKey(new ConsoleKeyInfo('0', ConsoleKey.UpArrow, false, false, false));
             scroller.ReadKey(new ConsoleKeyInfo('0', ConsoleKey.UpArrow, false, false, false));
@@ -142,7 +227,7 @@ namespace Gopher.Cli.Test
         [Test]
         public void Scroller_Selected_HasResponse()
         {
-            var scroller = new Scroller(new List<Response> { new Response("iTest Display\tFirst\tDomain Info\t71"), new Response("iTest Display\tSecond\tDomain Info\t71") }, 40);
+            var scroller = new Scroller(new List<Response> { new Response("iTest Display\tFirst\tDomain Info\t71"), new Response("iTest Display\tSecond\tDomain Info\t71") }, 40, 3);
 
             var selected = scroller.Selected;
 
@@ -153,7 +238,7 @@ namespace Gopher.Cli.Test
         [Test]
         public void Scroller_SelectedMoved_IsValue()
         {
-            var scroller = new Scroller(new List<Response> { new Response("iTest Display\tFirst\tDomain Info\t71"), new Response("iTest Display\tSecond\tDomain Info\t71") }, 40);
+            var scroller = new Scroller(new List<Response> { new Response("iTest Display\tFirst\tDomain Info\t71"), new Response("iTest Display\tSecond\tDomain Info\t71") }, 40, 3);
 
             scroller.ReadKey(new ConsoleKeyInfo('0', ConsoleKey.DownArrow, false, false, false));
             var selected = scroller.Selected;

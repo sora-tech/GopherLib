@@ -9,11 +9,13 @@ namespace Gopher.Cli
     {
         private readonly IList<Response> responses;
         private readonly int width;
+        private readonly int height;
 
-        public Scroller(IList<Response> responses, int consoleWidth)
+        public Scroller(IList<Response> responses, int consoleWidth, int consoleHeight)
         {
             this.responses = responses;
             this.width = consoleWidth;
+            this.height = consoleHeight;
         }
 
         public int Line { get; private set; }
@@ -21,9 +23,15 @@ namespace Gopher.Cli
 
         public void Draw(IConsole console)
         {
-            console.Reset();
+            var limit = responses.Count < height ? responses.Count : height;
+            var start = Line >= height ? Line - height + 1 : 0;
 
-            for (int r = 0; r < responses.Count; r++)
+            if(start > 0)
+            {
+                limit += Line - height + 1;
+            }
+
+            for (int r = start; r < limit; r++)
             {
                 Response item = responses[r];
                 var print = new Display(item);
@@ -35,6 +43,11 @@ namespace Gopher.Cli
 
                 console.WriteLine(print.Print(width));
                 console.SetNormal();
+            }
+
+            for(int p = 0; p < (height - responses.Count); p++)
+            {
+                console.WriteLine();
             }
         }
 
