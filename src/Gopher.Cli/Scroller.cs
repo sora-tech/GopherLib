@@ -5,12 +5,12 @@ using System.Collections.Generic;
 
 namespace Gopher.Cli
 {
-    public class Selector
+    public class Scroller
     {
         private readonly IList<Response> responses;
         private readonly int width;
 
-        public Selector(IList<Response> responses, int consoleWidth)
+        public Scroller(IList<Response> responses, int consoleWidth)
         {
             this.responses = responses;
             this.width = consoleWidth;

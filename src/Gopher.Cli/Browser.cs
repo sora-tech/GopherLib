@@ -8,13 +8,13 @@ namespace Gopher.Cli
     public class Browser
     {
         private readonly IConnectionFactory connectionFactory;
-        private Selector selector;
+        private Scroller selector;
 
         public Browser(IConnectionFactory factory, string uri)
         {
             Uri = new Uri(uri);
             this.connectionFactory = factory;
-            this.selector = new Selector(new List<Response>(), this.Width);
+            this.selector = new Scroller(new List<Response>(), this.Width);
         }
 
         public int Width { get; set; } = 80;
@@ -26,7 +26,7 @@ namespace Gopher.Cli
 
             var response = client.Menu(connectionFactory.CreateSimple(), selector);
 
-            this.selector = new Selector(response, Width);
+            this.selector = new Scroller(response, Width);
         }
         public void Request(Response request)
         {
@@ -87,7 +87,7 @@ namespace Gopher.Cli
                     break;
             }
 
-            this.selector = new Selector(response, Width);
+            this.selector = new Scroller(response, Width);
         }
 
         public void Draw(IConsole console)
