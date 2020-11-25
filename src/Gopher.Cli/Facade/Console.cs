@@ -4,6 +4,11 @@ namespace Gopher.Cli.Facade
 {
     public class Console : IConsole
     {
+        public ConsoleKeyInfo ReadKey()
+        {
+            return System.Console.ReadKey(true);
+        }
+
         public void Reset()
         {
             System.Console.Clear();
@@ -22,9 +27,19 @@ namespace Gopher.Cli.Facade
             System.Console.BackgroundColor = ConsoleColor.Black;
         }
 
+        public void Write(string text)
+        {
+            System.Console.Write(text);
+        }
+
         public void WriteLine(string text)
         {
             System.Console.WriteLine(text);
+        }
+
+        public void WriteLine()
+        {
+            System.Console.WriteLine();
         }
     }
 }
