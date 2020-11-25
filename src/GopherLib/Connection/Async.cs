@@ -53,7 +53,7 @@ namespace GopherLib.Connection
                 throw new Exception();
             }
 
-            var stream = connection.GetStream();
+            using var stream = connection.GetStream();
 
             var pathBytes = Encoding.ASCII.GetBytes(path);
             await stream.WriteAsync(pathBytes, 0, pathBytes.Length);

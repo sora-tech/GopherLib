@@ -54,7 +54,7 @@ namespace GopherLib.Connection
                 throw new Exception();
             }
 
-            var stream = client.GetStream();
+            using var stream = client.GetStream();
 
             var pathBytes = Encoding.ASCII.GetBytes(path);
 
