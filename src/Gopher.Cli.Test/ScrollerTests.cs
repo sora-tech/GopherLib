@@ -40,7 +40,7 @@ namespace Gopher.Cli.Test
 
             scroller.Draw(console);
 
-            console.Received(1).WriteLine(Arg.Is<string>(x => x == "i Test Dis"));
+            console.Received(1).WriteLine(Arg.Is<string>(x => x.Length == 10));
         }
 
         [Test]
@@ -51,7 +51,7 @@ namespace Gopher.Cli.Test
 
             scroller.Draw(console);
 
-            console.Received(1).WriteLine(Arg.Is<string>(x => x == "i Test Display                          "));
+            console.Received(1).WriteLine(Arg.Is<string>(x => x.Length == 40));
         }
 
         [Test]
@@ -63,8 +63,8 @@ namespace Gopher.Cli.Test
             scroller.Draw(console);
 
             // Display first 2 lines
-            console.Received(1).WriteLine(Arg.Is<string>(x => x == "i First Display                         "));
-            console.Received(1).WriteLine(Arg.Is<string>(x => x == "i Second Display                        "));
+            console.Received(1).WriteLine(Arg.Is<string>(x => x == "  First Display                         "));
+            console.Received(1).WriteLine(Arg.Is<string>(x => x == "  Second Display                        "));
 
             // display blank lines to fill to desired length
             console.Received(3).WriteLine();
@@ -80,8 +80,8 @@ namespace Gopher.Cli.Test
             scroller.Draw(console);
 
             // Display first 1 line
-            console.Received(1).WriteLine(Arg.Is<string>(x => x == "i First Display                         "));
-            console.Received(0).WriteLine(Arg.Is<string>(x => x == "i Second Display                        "));
+            console.Received(1).WriteLine(Arg.Is<string>(x => x == "  First Display                         "));
+            console.Received(0).WriteLine(Arg.Is<string>(x => x == "  Second Display                        "));
 
             // no blanking required
             console.Received(0).WriteLine();
@@ -99,8 +99,8 @@ namespace Gopher.Cli.Test
             Assert.AreEqual(1, scroller.Line);
 
             // Display second 1 line
-            console.Received(0).WriteLine(Arg.Is<string>(x => x == "i First Display                         "));
-            console.Received(1).WriteLine(Arg.Is<string>(x => x == "i Second Display                        "));
+            console.Received(0).WriteLine(Arg.Is<string>(x => x == "  First Display                         "));
+            console.Received(1).WriteLine(Arg.Is<string>(x => x == "  Second Display                        "));
 
             // no blanking required
             console.Received(0).WriteLine();
@@ -118,10 +118,10 @@ namespace Gopher.Cli.Test
             Assert.AreEqual(1, scroller.Line);
 
             // Display first & second line
-            console.Received(1).WriteLine(Arg.Is<string>(x => x == "i First Display                         "));
-            console.Received(1).WriteLine(Arg.Is<string>(x => x == "i Second Display                        "));
+            console.Received(1).WriteLine(Arg.Is<string>(x => x == "  First Display                         "));
+            console.Received(1).WriteLine(Arg.Is<string>(x => x == "  Second Display                        "));
             // Not scrolled into view
-            console.Received(0).WriteLine(Arg.Is<string>(x => x == "i Third Display                         "));
+            console.Received(0).WriteLine(Arg.Is<string>(x => x == "  Third Display                         "));
 
             // no blanking required
             console.Received(0).WriteLine();
@@ -140,11 +140,11 @@ namespace Gopher.Cli.Test
             Assert.AreEqual(2, scroller.Line);
 
             // scrolled out of view
-            console.Received(0).WriteLine(Arg.Is<string>(x => x == "i First Display                         "));
+            console.Received(0).WriteLine(Arg.Is<string>(x => x == "  First Display                         "));
 
             // Draw second and third
-            console.Received(1).WriteLine(Arg.Is<string>(x => x == "i Second Display                        "));
-            console.Received(1).WriteLine(Arg.Is<string>(x => x == "i Third Display                         "));
+            console.Received(1).WriteLine(Arg.Is<string>(x => x == "  Second Display                        "));
+            console.Received(1).WriteLine(Arg.Is<string>(x => x == "  Third Display                         "));
 
             // no blanking required
             console.Received(0).WriteLine();

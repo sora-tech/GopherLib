@@ -68,7 +68,6 @@ namespace Gopher.Cli.Test
 
             browser.Draw(console);
 
-            console.Received(1).WriteLine(Arg.Is("0 Test Display : Domain Info                                                    "));
             console.Received(1).Write("server: gopher://localhost/");
         }
 

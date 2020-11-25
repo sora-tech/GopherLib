@@ -40,7 +40,7 @@ namespace Gopher.Cli.Test
             var result = display.Print(60);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual("i Test Display                                              ", result);
+            Assert.AreEqual("  Test Display                                              ", result);
         }
 
         [Test]
@@ -52,7 +52,7 @@ namespace Gopher.Cli.Test
             var result = display.Print(60);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual("0 Test Display : Domain Info                                ", result);
+            Assert.AreEqual("F Test Display : Domain Info                                ", result);
         }
 
         [Test]
@@ -64,7 +64,7 @@ namespace Gopher.Cli.Test
             var result = display.Print(60);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual("1 Test Display : Domain Info                                ", result);
+            Assert.AreEqual("D Test Display : Domain Info                                ", result);
         }
 
         [Test]
@@ -90,7 +90,7 @@ namespace Gopher.Cli.Test
             var result = display.Print(60);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual("7 Test Display : Domain Info                                ", result);
+            Assert.AreEqual("S Test Display : Domain Info                                ", result);
         }
 
         [Test]

@@ -26,8 +26,10 @@ namespace Gopher.Cli
                 case ItemType.Unknown:
                     return empty;
                 case ItemType.File:
+                    val = $"F {response.Display} : {response.Domain}";
+                    break;
                 case ItemType.Directory:
-                    val = $"{(char)response.Type} {response.Display} : {response.Domain}";
+                    val = $"D {response.Display} : {response.Domain}";
                     break;
                 case ItemType.PhoneBook:
                     break;
@@ -42,7 +44,7 @@ namespace Gopher.Cli
                 case ItemType.UUEncoded:
                     break;
                 case ItemType.IndexSearch:
-                    val = $"{(char)response.Type} {response.Display} : {response.Domain}";
+                    val = $"S {response.Display} : {response.Domain}";
                     break;
                 case ItemType.Telnet:
                     break;
@@ -55,7 +57,7 @@ namespace Gopher.Cli
                     val = $"{(char)response.Type} {response.Display} : {response.Domain}";
                     break;
                 case ItemType.Info:
-                    val= $"{(char)response.Type} {response.Display}";
+                    val= $"  {response.Display}";
                     break;
                 default:
                     break;
