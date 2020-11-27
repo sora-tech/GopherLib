@@ -9,13 +9,13 @@ namespace Gopher.Cli
     public class Browser
     {
         private readonly IConnectionFactory connectionFactory;
-        private Scroller selector;
+        private IDisplay display;
 
         public Browser(IConnectionFactory factory, string uri)
         {
             Uri = new Uri(uri);
             this.connectionFactory = factory;
-            this.selector = new Scroller(new List<Response>(), this.Width, this.Height - 2);
+            this.display = new Scroller(new List<Response>(), this.Width, this.Height - 2);
         }
 
         public int Width { get; set; } = 80;
@@ -29,7 +29,7 @@ namespace Gopher.Cli
 
             var response = client.Menu(connectionFactory.CreateSimple(), selector);
 
-            this.selector = new Scroller(response, Width, Height - 2);
+            this.display = new Scroller(response, Width, Height - 2);
         }
         public void Request(Response request)
         {
@@ -52,52 +52,40 @@ namespace Gopher.Cli
             }
 
             var client = new Client(Uri);
-            var response = new List<Response>();
+
             switch (request.Type)
             {
-                case ItemType.Unknown:
-                    break;
                 case ItemType.File:
+                    var file = client.TextFile(connectionFactory.CreateSimple(), request.Selector);
+                    this.display = new Document(file, Width, Height - 2);
                     break;
                 case ItemType.Directory:
-                    response = client.Menu(connectionFactory.CreateSimple(), request.Selector);
+                    var response = client.Menu(connectionFactory.CreateSimple(), request.Selector);
+                    this.display = new Scroller(response, Width, Height - 2);
                     break;
+                case ItemType.Unknown:
                 case ItemType.PhoneBook:
-                    break;
                 case ItemType.Error:
-                    break;
                 case ItemType.BinHexed:
-                    break;
                 case ItemType.DOSBinary:
-                    break;
                 case ItemType.UUEncoded:
-                    break;
                 case ItemType.IndexSearch:
-                    break;
                 case ItemType.Telnet:
-                    break;
                 case ItemType.Binary:
-                    break;
                 case ItemType.RedundantServer:
-                    break;
                 case ItemType.TN3270:
-                    break;
                 case ItemType.GIF:
-                    break;
                 case ItemType.Image:
-                    break;
                 default:
                     break;
             }
-
-            this.selector = new Scroller(response, Width, Height - 2);
         }
 
         public void Draw(IConsole console)
         {
             console.Reset();
 
-            this.selector.Draw(console);
+            this.display.Draw(console);
 
             console.WriteLine();
             console.Write($"server: {Uri}");
@@ -112,11 +100,11 @@ namespace Gopher.Cli
                 return false;
             }
 
-            selector.ReadKey(key);
+            display.ReadKey(key);
 
-            if(key.Key == ConsoleKey.Enter)
+            if(key.Key == ConsoleKey.Enter && display.CanSelect())
             {
-                Request(selector.Selected);
+                Request(display.Selected());
             }
 
             return true;

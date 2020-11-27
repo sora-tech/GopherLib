@@ -1,8 +1,10 @@
 ﻿using Gopher.Cli.Facade;
+using GopherLib;
+using System;
 
 namespace Gopher.Cli.Display
 {
-    public class Document
+    public class Document : IDisplay
     {
         private readonly int width;
         private readonly int height;
@@ -38,6 +40,14 @@ namespace Gopher.Cli.Display
                     console.WriteLine(line + padding);
                 }
             }
+        }
+
+        public bool CanSelect() => false;
+        public Response Selected() => null;
+
+        public void ReadKey(ConsoleKeyInfo key)
+        {
+            throw new NotImplementedException();
         }
     }
 }

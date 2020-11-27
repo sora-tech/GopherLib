@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Gopher.Cli.Display
 {
-    public class Scroller
+    public class Scroller : IDisplay
     {
         private readonly IList<Response> responses;
         private readonly int width;
@@ -19,7 +19,9 @@ namespace Gopher.Cli.Display
         }
 
         public int Line { get; private set; }
-        public Response Selected => responses[Line];
+
+        public bool CanSelect() => true;
+        public Response Selected() => responses[Line];
 
         public void Draw(IConsole console)
         {
