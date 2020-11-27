@@ -23,6 +23,9 @@ namespace Gopher.Cli
 
         public void Draw(IConsole console)
         {
+            // This is a very simple scroll down follow
+            // there is no upwards delay which does not look nice
+
             var limit = responses.Count < height ? responses.Count : height;
             var start = Line >= height ? Line - height + 1 : 0;
 
