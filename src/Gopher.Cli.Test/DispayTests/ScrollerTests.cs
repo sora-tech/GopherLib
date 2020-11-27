@@ -230,7 +230,7 @@ namespace Gopher.Cli.Test.DisplayTests
         {
             var scroller = new Scroller(new List<Response> { new Response("iTest Display\tFirst\tDomain Info\t71"), new Response("iTest Display\tSecond\tDomain Info\t71") }, 40, 3);
 
-            var selected = scroller.Selected;
+            var selected = scroller.Selected();
 
             Assert.IsNotNull(selected);
             Assert.AreEqual("First", selected.Selector);
@@ -242,7 +242,7 @@ namespace Gopher.Cli.Test.DisplayTests
             var scroller = new Scroller(new List<Response> { new Response("iTest Display\tFirst\tDomain Info\t71"), new Response("iTest Display\tSecond\tDomain Info\t71") }, 40, 3);
 
             scroller.ReadKey(new ConsoleKeyInfo('0', ConsoleKey.DownArrow, false, false, false));
-            var selected = scroller.Selected;
+            var selected = scroller.Selected();
 
             Assert.IsNotNull(selected);
             Assert.AreEqual("Second", selected.Selector);
