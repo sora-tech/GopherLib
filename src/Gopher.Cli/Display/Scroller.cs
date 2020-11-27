@@ -37,14 +37,13 @@ namespace Gopher.Cli.Display
             for (int r = start; r < limit; r++)
             {
                 Response item = responses[r];
-                var print = new Printer(item);
 
                 if (r == Line)
                 {
                     console.SetHilight();
                 }
 
-                console.WriteLine(print.Print(width));
+                console.WriteLine(Printer.Print(item, width));
                 console.SetNormal();
             }
 

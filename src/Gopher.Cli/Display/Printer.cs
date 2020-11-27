@@ -2,16 +2,9 @@
 
 namespace Gopher.Cli.Display
 {
-    public class Printer
+    public static class Printer
     {
-        private Response response;
-
-        public Printer(Response response)
-        {
-            this.response = response;
-        }
-
-        public string Print(int width)
+        public static string Print(Response response, int width)
         {
             if (response == null)
             {
