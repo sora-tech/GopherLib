@@ -1,9 +1,10 @@
-﻿using Gopher.Cli.Facade;
+﻿using Gopher.Cli.Display;
+using Gopher.Cli.Facade;
 using NSubstitute;
 using NUnit.Framework;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Gopher.Cli.Test
+namespace Gopher.Cli.Test.DisplayTests
 {
     [TestFixture]
     [Category("Cli")]

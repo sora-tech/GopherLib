@@ -1,12 +1,12 @@
 ﻿using GopherLib;
 
-namespace Gopher.Cli
+namespace Gopher.Cli.Display
 {
-    public class Display
+    public class Printer
     {
         private Response response;
 
-        public Display(Response response)
+        public Printer(Response response)
         {
             this.response = response;
         }

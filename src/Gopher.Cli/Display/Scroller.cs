@@ -3,7 +3,7 @@ using GopherLib;
 using System;
 using System.Collections.Generic;
 
-namespace Gopher.Cli
+namespace Gopher.Cli.Display
 {
     public class Scroller
     {
@@ -37,7 +37,7 @@ namespace Gopher.Cli
             for (int r = start; r < limit; r++)
             {
                 Response item = responses[r];
-                var print = new Display(item);
+                var print = new Printer(item);
 
                 if (r == Line)
                 {

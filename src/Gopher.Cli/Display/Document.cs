@@ -1,6 +1,6 @@
 ﻿using Gopher.Cli.Facade;
 
-namespace Gopher.Cli
+namespace Gopher.Cli.Display
 {
     public class Document
     {

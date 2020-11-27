@@ -1,4 +1,5 @@
-﻿using Gopher.Cli.Facade;
+﻿using Gopher.Cli.Display;
+using Gopher.Cli.Facade;
 using GopherLib;
 using System;
 using System.Collections.Generic;
