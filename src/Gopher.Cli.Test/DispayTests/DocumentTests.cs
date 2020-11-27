@@ -2,6 +2,7 @@
 using Gopher.Cli.Facade;
 using NSubstitute;
 using NUnit.Framework;
+using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Gopher.Cli.Test.DisplayTests
@@ -11,6 +12,9 @@ namespace Gopher.Cli.Test.DisplayTests
     [ExcludeFromCodeCoverage]
     public class DocumentTests
     {
+        private readonly ConsoleKeyInfo downKey = new ConsoleKeyInfo('0', ConsoleKey.DownArrow, false, false, false);
+        private readonly ConsoleKeyInfo upKey = new ConsoleKeyInfo('0', ConsoleKey.UpArrow, false, false, false);
+
         [Test]
         public void Document_Empty_DrawsNothing()
         {
@@ -59,13 +63,110 @@ namespace Gopher.Cli.Test.DisplayTests
         public void Document_MultiLine_DrawsHeight()
         {
             var console = Substitute.For<IConsole>();
-            var document = new Document("one\r\ntwo\r\nthree\r\nfour\r\nfive", 20, 3);
+            var document = new Document("one\r\ntwo\r\nthree\r\nfour\r\nfive", 5, 3);
 
             document.Draw(console);
 
             console.Received(3).WriteLine(Arg.Any<string>());
-            console.DidNotReceive().WriteLine(Arg.Is<string>(x => x == "four"));
-            console.DidNotReceive().WriteLine(Arg.Is<string>(x => x == "five"));
+            console.DidNotReceive().WriteLine(Arg.Is<string>(x => x == "four "));
+            console.DidNotReceive().WriteLine(Arg.Is<string>(x => x == "five "));
+        }
+
+        [Test]
+        public void Document_ScrollDown_DrawsArea()
+        {
+            var console = Substitute.For<IConsole>();
+            var document = new Document("one\r\ntwo\r\nthree\r\nfour\r\nfive", 5, 3);
+
+            document.ReadKey(downKey);
+
+            document.Draw(console);
+
+            console.DidNotReceive().WriteLine(Arg.Is<string>(x => x == "one  "));
+            console.Received().WriteLine(Arg.Is<string>(x => x == "two  "));
+            console.Received().WriteLine(Arg.Is<string>(x => x == "three"));
+            console.Received().WriteLine(Arg.Is<string>(x => x == "four "));
+            console.DidNotReceive().WriteLine(Arg.Is<string>(x => x == "five "));
+        }
+
+        [Test]
+        public void Document_ScrollDown_LimitsEnd()
+        {
+            var console = Substitute.For<IConsole>();
+            var document = new Document("one\r\ntwo\r\nthree\r\nfour\r\nfive", 5, 3);
+
+            document.ReadKey(downKey);
+            document.ReadKey(downKey);
+            document.ReadKey(downKey);
+
+            Assert.DoesNotThrow(() => document.Draw(console));
+
+            console.DidNotReceive().WriteLine(Arg.Is<string>(x => x == "one  "));
+            console.DidNotReceive().WriteLine(Arg.Is<string>(x => x == "two  "));
+            console.Received().WriteLine(Arg.Is<string>(x => x == "three"));
+            console.Received().WriteLine(Arg.Is<string>(x => x == "four "));
+            console.Received().WriteLine(Arg.Is<string>(x => x == "five "));
+        }
+
+        [Test]
+        public void Document_ScrollUp_LimitsStart()
+        {
+            var console = Substitute.For<IConsole>();
+            var document = new Document("one\r\ntwo\r\nthree\r\nfour\r\nfive", 5, 3);
+
+            document.ReadKey(upKey);
+            document.ReadKey(upKey);
+            document.ReadKey(upKey);
+
+            Assert.DoesNotThrow(() => document.Draw(console));
+
+            console.Received().WriteLine(Arg.Is<string>(x => x == "one  "));
+            console.Received().WriteLine(Arg.Is<string>(x => x == "two  "));
+            console.Received().WriteLine(Arg.Is<string>(x => x == "three"));
+            console.DidNotReceive().WriteLine(Arg.Is<string>(x => x == "four "));
+            console.DidNotReceive().WriteLine(Arg.Is<string>(x => x == "five "));
+        }
+
+        [Test]
+        public void Document_ScrollDownUp_Returns()
+        {
+            var console = Substitute.For<IConsole>();
+            var document = new Document("one\r\ntwo\r\nthree\r\nfour\r\nfive", 5, 3);
+
+            document.ReadKey(downKey);
+            document.ReadKey(downKey);
+            document.ReadKey(upKey);
+
+            Assert.DoesNotThrow(() => document.Draw(console));
+
+            console.DidNotReceive().WriteLine(Arg.Is<string>(x => x == "one  "));
+            console.Received().WriteLine(Arg.Is<string>(x => x == "two  "));
+            console.Received().WriteLine(Arg.Is<string>(x => x == "three"));
+            console.Received().WriteLine(Arg.Is<string>(x => x == "four "));
+            console.DidNotReceive().WriteLine(Arg.Is<string>(x => x == "five "));
+        }
+
+
+        [Test]
+        public void Document_ScrollDownAboveLimitUp_Returns()
+        {
+            var console = Substitute.For<IConsole>();
+            var document = new Document("one\r\ntwo\r\nthree\r\nfour\r\nfive", 5, 3);
+
+            document.ReadKey(downKey);
+            document.ReadKey(downKey);
+            document.ReadKey(downKey);
+            document.ReadKey(downKey);
+            document.ReadKey(downKey);
+            document.ReadKey(upKey);
+
+            Assert.DoesNotThrow(() => document.Draw(console));
+
+            console.DidNotReceive().WriteLine(Arg.Is<string>(x => x == "one  "));
+            console.Received().WriteLine(Arg.Is<string>(x => x == "two  "));
+            console.Received().WriteLine(Arg.Is<string>(x => x == "three"));
+            console.Received().WriteLine(Arg.Is<string>(x => x == "four "));
+            console.DidNotReceive().WriteLine(Arg.Is<string>(x => x == "five "));
         }
     }
 }
