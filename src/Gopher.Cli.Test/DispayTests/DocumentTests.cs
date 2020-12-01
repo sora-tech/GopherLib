@@ -27,14 +27,17 @@ namespace Gopher.Cli.Test.DisplayTests
         }
 
         [Test]
-        public void Document_WithWidth_CropsToLength()
+        public void Document_WithWidth_WrapsToLength()
         {
             var console = Substitute.For<IConsole>();
             var document = new Document("this line is longer than 10 characters", 10, 10);
 
             document.Draw(console);
 
-            console.Received(1).WriteLine(Arg.Is<string>(x => x == "this line "));
+            console.Received().WriteLine(Arg.Is<string>(x => x == "this line "));
+            console.Received().WriteLine(Arg.Is<string>(x => x == "is longer "));
+            console.Received().WriteLine(Arg.Is<string>(x => x == "than 10 ch"));
+            console.Received().WriteLine(Arg.Is<string>(x => x == "aracters"));
         }
 
         [Test]

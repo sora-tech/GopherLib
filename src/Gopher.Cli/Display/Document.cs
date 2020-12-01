@@ -1,6 +1,8 @@
 ﻿using Gopher.Cli.Facade;
 using GopherLib;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Gopher.Cli.Display
 {
@@ -11,7 +13,7 @@ namespace Gopher.Cli.Display
         private readonly string response;
         private int line = 0;
 
-        private readonly string[] lines;
+        private readonly List<string> lines;
 
         public Document(string response, int consoleWidth, int consoleHeight)
         {
@@ -20,7 +22,26 @@ namespace Gopher.Cli.Display
             this.response = response;
 
 
-            lines = response.Split("\r\n");
+            lines = response.Split("\r\n").ToList();
+
+            for (int i = lines.Count - 1; i >= 0; i--)
+            {
+                if(lines[i].Length > width)
+                {
+                    var index = i;
+                    while (i < lines.Count && lines[i].Length > width)
+                    {
+                        var original = lines[i].Substring(width);
+                        lines[i] = lines[i].Substring(0, width);
+                        lines.Insert(++i, original);
+                    }
+                    i = index;
+                }
+                else
+                {
+                    lines[i] = lines[i] + new string(' ', width - lines[i].Length);
+                }
+            }
         }
 
         public void Draw(IConsole console)
@@ -30,24 +51,13 @@ namespace Gopher.Cli.Display
                 return;
             }
 
-            var limit = lines.Length > (height + line) ? (height + line): lines.Length;
-
-            var start = line > lines.Length - height ? lines.Length - height : line;
+            var limit = lines.Count > (height + line) ? (height + line): lines.Count;
+            var start = line > lines.Count - height ? lines.Count - height : line;
             start = start < 0 ? 0 : start;
 
             for (int l = start; l < limit; l++)
             {
-                string line = lines[l];
-                if (line.Length > width)
-                {
-                    // should wrap and not trim!
-                    console.WriteLine(line.Substring(0, width));
-                }
-                else
-                {
-                    var padding = new string(' ', width - line.Length);
-                    console.WriteLine(line + padding);
-                }
+                console.WriteLine(lines[l]);
             }
         }
 
@@ -58,7 +68,7 @@ namespace Gopher.Cli.Display
         {
             if(key.Key == ConsoleKey.DownArrow)
             {
-                line = (line >= lines.Length - height) ? lines.Length - height: line + 1;
+                line = (line >= lines.Count - height) ? lines.Count - height: line + 1;
             }
             if (key.Key == ConsoleKey.UpArrow)
             {
