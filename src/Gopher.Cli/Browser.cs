@@ -16,20 +16,21 @@ namespace Gopher.Cli
             Uri = new Uri(uri);
             this.connectionFactory = factory;
             this.display = new Scroller(new List<Response>(), this.Width, this.Height - 2);
+            this.History = new Stack<Response>();
         }
 
         public int Width { get; set; } = 80;
         public int Height{ get; set; } = 10;
 
+        public Stack<Response> History { get; private set; }
+
         public Uri Uri { get; private set; }
 
         public void Request(string selector)
         {
-            var client = new Client(Uri);
+            var request = new Response($"1{selector}\t{selector}\t{Uri.Host}\t");
 
-            var response = client.Menu(connectionFactory.CreateSimple(), selector);
-
-            this.display = new Scroller(response, Width, Height - 2);
+            Request(request);
         }
         public void Request(Response request)
         {
@@ -48,8 +49,9 @@ namespace Gopher.Cli
                 {
                     Uri = new Uri(request.Domain);
                 }
-                
             }
+
+            History.Push(request);
 
             var client = new Client(Uri);
 
@@ -101,6 +103,16 @@ namespace Gopher.Cli
             }
 
             display.ReadKey(key);
+
+            if(key.Key == ConsoleKey.LeftArrow || key.Key == ConsoleKey.B)
+            {
+                if (this.History.Count > 1)
+                {
+                    this.History.Pop(); //remove current
+                    Request(this.History.Pop());    // Request will re-add to stack
+                    return true;
+                }
+            }
 
             if(key.Key == ConsoleKey.Enter && display.CanSelect())
             {

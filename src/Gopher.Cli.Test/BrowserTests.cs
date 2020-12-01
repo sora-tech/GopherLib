@@ -72,7 +72,7 @@ namespace Gopher.Cli.Test
         }
 
         [Test]
-        public void Browser_InputEsc_ReturnsTrue()
+        public void Browser_InputEsc_NoContinue()
         {
             var connectionfactory = Substitute.For<IConnectionFactory>();
             var console = Substitute.For<IConsole>();
@@ -87,7 +87,7 @@ namespace Gopher.Cli.Test
         }
 
         [Test]
-        public void Browser_Inputq_ReturnsTrue()
+        public void Browser_Inputq_NoContinue()
         {
             var connectionfactory = Substitute.For<IConnectionFactory>();
             var console = Substitute.For<IConsole>();
@@ -102,7 +102,7 @@ namespace Gopher.Cli.Test
         }
 
         [Test]
-        public void Browser_InputOther_ReturnsFalse()
+        public void Browser_InputOther_Continue()
         {
             var connectionfactory = Substitute.For<IConnectionFactory>();
             var console = Substitute.For<IConsole>();
@@ -115,5 +115,54 @@ namespace Gopher.Cli.Test
 
             Assert.IsTrue(result);
         }
+
+        [Test]
+        public void BrowserHistory_Constructor_IgnoresStart()
+        {
+            var connectionfactory = Substitute.For<IConnectionFactory>();
+
+            var browser = new Browser(connectionfactory, "gopher://localhost");
+
+            Assert.IsEmpty(browser.History);
+        }
+
+        [Test]
+        public void BrowserHistory_StringRquest_AddsRequest()
+        {
+            var connectionfactory = Substitute.For<IConnectionFactory>();
+
+            var browser = new Browser(connectionfactory, "gopher://localhost");
+            browser.Request("/");
+
+            Assert.AreEqual(1, browser.History.Count);
+            Assert.AreEqual("localhost", browser.History.Peek().Domain);
+        }
+
+        [Test]
+        public void BrowserHistory_ObjectRquest_AddsRequestUri()
+        {
+            var connectionfactory = Substitute.For<IConnectionFactory>();
+
+            var browser = new Browser(connectionfactory, "gopher://localhost");
+            browser.Request(new Response("0Test Display\tSelector\texample.com\t"));
+
+            Assert.AreEqual(1, browser.History.Count);
+            Assert.AreEqual("example.com", browser.History.Peek().Domain);
+        }
+
+        [Test]
+        public void BrowserHistory_MultipleRquest_AddsAllRequestUri()
+        {
+            var connectionfactory = Substitute.For<IConnectionFactory>();
+
+            var browser = new Browser(connectionfactory, "gopher://localhost");
+            browser.Request(new Response("0Test Display\tFirst\texample.com\t"));
+            browser.Request(new Response("0Test Display\tSecond\texample.com\t"));
+
+            Assert.AreEqual(2, browser.History.Count);
+            Assert.AreEqual("Second", browser.History.Pop().Selector);
+            Assert.AreEqual("First", browser.History.Pop().Selector);
+        }
     }
 }
+
