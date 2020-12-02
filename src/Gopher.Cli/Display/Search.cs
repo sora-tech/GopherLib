@@ -37,7 +37,31 @@ namespace Gopher.Cli.Display
                 return false;
             }
 
-            term += key.KeyChar;
+            if (key.Key == ConsoleKey.Escape)
+            {
+                term = string.Empty;
+                return false;
+            }
+
+            if (key.Key == ConsoleKey.Backspace)
+            {
+                // drop last character
+                if (term.Length > 0)
+                { 
+                    term = term[0..^1]; 
+                }
+                return true;
+            }
+
+            if(key.Key == ConsoleKey.LeftArrow && term.Length == 0)
+            {
+                return false;
+            }
+
+            if(key.KeyChar != '0')
+            {
+                term += key.KeyChar;
+            }
 
             return true;
         }

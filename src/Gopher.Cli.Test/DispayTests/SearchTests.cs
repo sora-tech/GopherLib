@@ -116,6 +116,77 @@ namespace Gopher.Cli.Test.DispayTests
 
             Assert.IsNotNull(result);
             Assert.AreEqual(ItemType.IndexSearch, result.Type);
+
+            Assert.AreEqual("Selector a", result.Selector);
+        }
+
+        [Test]
+        public void Search_EscInput_AbandonsRequest()
+        {
+            var request = new Response("7Search\tSelector\texample.com\t70");
+            var search = new Search(request, 10, 10);
+
+            search.ReadKey(new System.ConsoleKeyInfo('a', System.ConsoleKey.A, false, false, false));
+            var read = search.ReadKey(new System.ConsoleKeyInfo('0', System.ConsoleKey.Escape, false, false, false));
+
+            Assert.IsFalse(read);
+
+            var result = search.CanSelect();
+            Assert.IsFalse(result);
+        }
+
+        [Test]
+        public void Search_BackspaceEmpty_DoesNotThrow()
+        {
+            var request = new Response("7Search\tSelector\texample.com\t70");
+            var search = new Search(request, 10, 10);
+
+            Assert.DoesNotThrow(() => search.ReadKey(new System.ConsoleKeyInfo('0', System.ConsoleKey.Backspace, false, false, false)));
+
+            var result = search.CanSelect();
+            Assert.IsFalse(result);
+        }
+
+        [Test]
+        public void Search_NonPrinting_Ignores()
+        {
+            var request = new Response("7Search\tSelector\texample.com\t70");
+            var search = new Search(request, 10, 10);
+
+            search.ReadKey(new System.ConsoleKeyInfo('a', System.ConsoleKey.A, false, false, false));
+            search.ReadKey(new System.ConsoleKeyInfo('0', System.ConsoleKey.Home, false, false, false));
+
+            var canSelect = search.CanSelect();
+            Assert.IsTrue(canSelect);
+
+            var result = search.Selected();
+            Assert.AreEqual("Selector a", result.Selector);
+        }
+
+        [Test]
+        public void Search_BackspaceInput_DeletesTerm()
+        {
+            var request = new Response("7Search\tSelector\texample.com\t70");
+            var search = new Search(request, 10, 10);
+
+            search.ReadKey(new System.ConsoleKeyInfo('a', System.ConsoleKey.A, false, false, false));
+            var read = search.ReadKey(new System.ConsoleKeyInfo('0', System.ConsoleKey.Backspace, false, false, false));
+
+            Assert.IsTrue(read);
+
+            var result = search.CanSelect();
+            Assert.IsFalse(result);
+        }
+
+        [Test]
+        public void Search_LeftArrow_TermEmpty_ReadFalse()
+        {
+            var request = new Response("7Search\tSelector\texample.com\t70");
+            var search = new Search(request, 10, 10);
+
+            var read = search.ReadKey(new System.ConsoleKeyInfo('0', System.ConsoleKey.LeftArrow, false, false, false));
+
+            Assert.IsFalse(read);
         }
     }
 }
