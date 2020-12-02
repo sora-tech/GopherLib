@@ -55,7 +55,7 @@ namespace Gopher.Cli.Display
             }
         }
 
-        public void ReadKey(ConsoleKeyInfo key)
+        public bool ReadKey(ConsoleKeyInfo key)
         {
             if(key.Key == ConsoleKey.DownArrow)
             {
@@ -74,6 +74,8 @@ namespace Gopher.Cli.Display
                     Line = 0;
                 }
             }
+
+            return false;
         }
     }
 }

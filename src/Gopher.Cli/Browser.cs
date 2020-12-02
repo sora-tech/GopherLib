@@ -15,12 +15,13 @@ namespace Gopher.Cli
         {
             Uri = new Uri(uri);
             this.connectionFactory = factory;
-            this.display = new Scroller(new List<Response>(), this.Width, this.Height - 2);
+            this.display = new Scroller(new List<Response>(), this.Width, this.displayHeight);
             this.History = new Stack<Response>();
         }
 
         public int Width { get; set; } = 80;
-        public int Height{ get; set; } = 10;
+        public int Height { get; set; } = 10;
+        private int displayHeight { get => this.Height - 2; }
 
         public Stack<Response> History { get; private set; }
 
@@ -59,11 +60,11 @@ namespace Gopher.Cli
             {
                 case ItemType.File:
                     var file = client.TextFile(connectionFactory.CreateSimple(), request.Selector);
-                    this.display = new Document(file, Width, Height - 2);
+                    this.display = new Document(file, Width, displayHeight);
                     break;
                 case ItemType.Directory:
                     var response = client.Menu(connectionFactory.CreateSimple(), request.Selector);
-                    this.display = new Scroller(response, Width, Height - 2);
+                    this.display = new Scroller(response, Width, displayHeight);
                     break;
                 case ItemType.Unknown:
                 case ItemType.PhoneBook:
@@ -72,6 +73,17 @@ namespace Gopher.Cli
                 case ItemType.DOSBinary:
                 case ItemType.UUEncoded:
                 case ItemType.IndexSearch:
+                    var search = request.Selector.Split(" ");
+                    if (search.Length > 1)
+                    {
+                        var searchResponse = client.Search(connectionFactory.CreateSimple(), search[0], search[1]);
+                        this.display = new Scroller(searchResponse, Width, displayHeight);
+                    }
+                    else
+                    {
+                        this.display = new Search(request, Width, displayHeight);
+                    }
+                    break;
                 case ItemType.Telnet:
                 case ItemType.Binary:
                 case ItemType.RedundantServer:
@@ -97,12 +109,15 @@ namespace Gopher.Cli
         {
             var key = console.ReadKey();
 
-            if(key.Key == ConsoleKey.Escape || key.Key == ConsoleKey.Q)
+            if (display.ReadKey(key))
+            {
+                return true;
+            }
+
+            if (key.Key == ConsoleKey.Escape || key.Key == ConsoleKey.Q)
             {
                 return false;
             }
-
-            display.ReadKey(key);
 
             if(key.Key == ConsoleKey.LeftArrow || key.Key == ConsoleKey.B)
             {

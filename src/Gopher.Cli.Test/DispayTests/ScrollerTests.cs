@@ -176,6 +176,16 @@ namespace Gopher.Cli.Test.DisplayTests
         }
 
         [Test]
+        public void Scroller_ReadKey_IsFalse()
+        {
+            var scroller = new Scroller(new List<Response> { new Response("iTest Display\tSelector Text\tDomain Info\t71"), new Response("iTest Display\tSelector Text\tDomain Info\t71") }, 40, 3);
+
+            var result = scroller.ReadKey(new ConsoleKeyInfo('0', ConsoleKey.DownArrow, false, false, false));
+
+            Assert.IsFalse(result);
+        }
+
+        [Test]
         public void Scroller_ReadKey_DownIncreasesLine()
         {
             var scroller = new Scroller(new List<Response> { new Response("iTest Display\tSelector Text\tDomain Info\t71"), new Response("iTest Display\tSelector Text\tDomain Info\t71") }, 40, 3);

@@ -91,6 +91,16 @@ namespace Gopher.Cli.Test.DisplayTests
         }
 
         [Test]
+        public void Document_ReadKey_AlwaysFalse()
+        {
+            var document = new Document("one\r\ntwo\r\nthree\r\nfour\r\nfive", 5, 3);
+
+            var result = document.ReadKey(downKey);
+
+            Assert.IsFalse(result);
+        }
+
+        [Test]
         public void Document_ScrollDown_DrawsArea()
         {
             var console = Substitute.For<IConsole>();

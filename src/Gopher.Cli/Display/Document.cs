@@ -69,7 +69,7 @@ namespace Gopher.Cli.Display
         public bool CanSelect() => false;
         public Response Selected() => null;
 
-        public void ReadKey(ConsoleKeyInfo key)
+        public bool ReadKey(ConsoleKeyInfo key)
         {
             if(key.Key == ConsoleKey.DownArrow)
             {
@@ -79,6 +79,8 @@ namespace Gopher.Cli.Display
             {
                 line = (line > 0) ? line - 1 : 0; 
             }
+
+            return false;
         }
     }
 }
