@@ -51,13 +51,18 @@ namespace Gopher.Cli.Display
                 return;
             }
 
-            var limit = lines.Count > (height + line) ? (height + line): lines.Count;
+            var limit = lines.Count > (height + line) ? (height + line) : lines.Count;
             var start = line > lines.Count - height ? lines.Count - height : line;
             start = start < 0 ? 0 : start;
 
             for (int l = start; l < limit; l++)
             {
                 console.WriteLine(lines[l]);
+            }
+
+            for (int p = 0; p < height - limit; p++)
+            {
+                console.WriteLine();
             }
         }
 

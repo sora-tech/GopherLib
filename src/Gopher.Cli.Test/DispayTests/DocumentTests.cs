@@ -75,6 +75,21 @@ namespace Gopher.Cli.Test.DisplayTests
             console.DidNotReceive().WriteLine(Arg.Is<string>(x => x == "five "));
         }
 
+
+        [Test]
+        public void Document_MultiLine_PadsHight()
+        {
+            var console = Substitute.For<IConsole>();
+            var document = new Document("one\r\ntwo", 5, 5);
+
+            document.Draw(console);
+
+            console.Received(2).WriteLine(Arg.Any<string>());
+            console.Received(3).WriteLine();
+            console.Received().WriteLine(Arg.Is<string>(x => x == "one  "));
+            console.Received().WriteLine(Arg.Is<string>(x => x == "two  "));
+        }
+
         [Test]
         public void Document_ScrollDown_DrawsArea()
         {
