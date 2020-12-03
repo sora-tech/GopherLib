@@ -61,15 +61,22 @@ namespace GopherLib.Connection
             stream.Write(pathBytes, 0, pathBytes.Length);
             stream.Flush();
 
-            var buffer = new byte[1024];
-            var data = new byte[1024];
+            int chunk = 1024;
+
+            var buffer = new byte[chunk];
+            var data = new byte[chunk];
+            var temp = new byte[chunk];
             var size = 0;
+            int loops = 1;
             int read;
+
+            var end = new byte[3];
+            var terminator = new byte[3] { (int)'\r', (int)'\n', (int)'.' };
             do
             {
                 try
                 {
-                    read = stream.Read(buffer, 0, 1024);
+                    read = stream.Read(buffer, 0, chunk);
                     buffer.CopyTo(data, size);
                     size += read;
                 }
@@ -80,7 +87,7 @@ namespace GopherLib.Connection
 
                 if (read > 0)
                 {
-                    var temp = new byte[data.Length];
+                    temp = new byte[data.Length];
                     data.CopyTo(temp, 0);
 
                     data = new byte[data.Length + size];
@@ -90,14 +97,18 @@ namespace GopherLib.Connection
                 // read enough to contain terminator sequence
                 if(read > 3)
                 {
-                    var terminator = new byte[3] { (int)'\r', (int)'\n', (int)'.' };
-                    var end = data[(read-3)..read];
+                    end = data[(read-3)..read];
                     if(Enumerable.SequenceEqual(end, terminator))
                     {
                         break;
                     }
                 }
 
+                if (loops++ % 5 == 0)
+                {
+                    chunk *= 2;
+                    buffer = new byte[chunk];
+                }
 
             } while (read != 0);
 
