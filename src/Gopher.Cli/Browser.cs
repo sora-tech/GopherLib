@@ -66,12 +66,6 @@ namespace Gopher.Cli
                     var response = client.Menu(connectionFactory.CreateSimple(), request.Selector);
                     this.display = new Scroller(response, Width, displayHeight);
                     break;
-                case ItemType.Unknown:
-                case ItemType.PhoneBook:
-                case ItemType.Error:
-                case ItemType.BinHexed:
-                case ItemType.DOSBinary:
-                case ItemType.UUEncoded:
                 case ItemType.IndexSearch:
                     var search = request.Selector.Split(" ");
                     if (search.Length > 1)
@@ -84,12 +78,18 @@ namespace Gopher.Cli
                         this.display = new Search(request, Width, displayHeight);
                     }
                     break;
-                case ItemType.Telnet:
                 case ItemType.Binary:
-                case ItemType.RedundantServer:
-                case ItemType.TN3270:
                 case ItemType.GIF:
                 case ItemType.Image:
+                case ItemType.DOSBinary:
+                case ItemType.Telnet:
+                case ItemType.Unknown:
+                case ItemType.PhoneBook:
+                case ItemType.Error:
+                case ItemType.BinHexed:
+                case ItemType.UUEncoded:
+                case ItemType.RedundantServer:
+                case ItemType.TN3270:
                 default:
                     break;
             }
