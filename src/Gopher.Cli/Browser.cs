@@ -3,6 +3,7 @@ using Gopher.Cli.Facade;
 using GopherLib;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Gopher.Cli
 {
@@ -10,10 +11,12 @@ namespace Gopher.Cli
     {
         private readonly IConnectionFactory connectionFactory;
         private IDisplay display;
+        private readonly string downloadPath;
 
-        public Browser(IConnectionFactory factory, string uri)
+        public Browser(IConnectionFactory factory, IConfig config)
         {
-            Uri = new Uri(uri);
+            Uri = config.Homepage();
+            downloadPath = config.Downloads();
             this.connectionFactory = factory;
             this.display = new Scroller(new List<Response>(), this.Width, this.displayHeight);
             this.History = new Stack<Response>();
@@ -82,6 +85,18 @@ namespace Gopher.Cli
                 case ItemType.GIF:
                 case ItemType.Image:
                 case ItemType.DOSBinary:
+                    var binary = client.Binary(connectionFactory.CreateSimple(), request.Selector);
+                    var fileName = Path.Combine(downloadPath, request.Display);
+                    if (request.Display.Contains("\t"))
+                    {
+                        fileName = Path.Combine(downloadPath, request.Display.Split("\t")[0]);
+                    }
+                    if (request.Display.Contains(" "))
+                    {
+                        fileName = Path.Combine(downloadPath, request.Display.Split(" ")[0]);
+                    }
+                    File.WriteAllBytes(fileName, binary.ToArray());
+                    break;
                 case ItemType.Telnet:
                 case ItemType.Unknown:
                 case ItemType.PhoneBook:

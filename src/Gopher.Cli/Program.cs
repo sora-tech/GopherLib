@@ -15,8 +15,9 @@ namespace Gopher.Cli
 
             var factory = new ConnectionFactory();
             var console = new Facade.Console();
+            var config = new Config();
 
-            var browser = new Browser(factory, "gopher://sdf.org")
+            var browser = new Browser(factory, config)
             {
                 Width = width,
                 Height = height
