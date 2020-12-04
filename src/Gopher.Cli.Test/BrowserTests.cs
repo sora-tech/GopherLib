@@ -12,11 +12,22 @@ namespace Gopher.Cli.Test
     [ExcludeFromCodeCoverage]
     public class BrowserTests
     {
+        private IConnectionFactory connectionfactory;
+        private IConfig config;
+
+        [SetUp]
+        public void Setup()
+        {
+            connectionfactory = Substitute.For<IConnectionFactory>();
+            config = Substitute.For<IConfig>();
+        }
+
         [Test]
         public void Browser_Setup_Uri()
         {
-            var connectionfactory = Substitute.For<IConnectionFactory>();
-            var browser = new Browser(connectionfactory, "gopher://localhost");
+            config.Homepage().Returns(new Uri("gopher://localhost"));
+
+            var browser = new Browser(connectionfactory, config);
 
             Assert.IsNotNull(browser.Uri);
             Assert.AreEqual("gopher://localhost/", browser.Uri.AbsoluteUri);
@@ -25,11 +36,11 @@ namespace Gopher.Cli.Test
         [Test]
         public void Browser_Request_MakesRequest()
         {
-            var connectionfactory = Substitute.For<IConnectionFactory>();
+            config.Homepage().Returns(new Uri("gopher://localhost"));
             var connection = Substitute.For<IConnection>();
             connectionfactory.CreateSimple().Returns(connection);
 
-            var browser = new Browser(connectionfactory, "gopher://localhost");
+            var browser = new Browser(connectionfactory, config);
 
             connection.Open(Arg.Any<string>(), Arg.Any<int>()).Returns(true);
 
@@ -41,10 +52,10 @@ namespace Gopher.Cli.Test
         [Test]
         public void Browser_NoData_DrawsEmpty()
         {
-            var connectionfactory = Substitute.For<IConnectionFactory>();
+            config.Homepage().Returns(new Uri("gopher://localhost"));
             var console = Substitute.For<IConsole>();
 
-            var browser = new Browser(connectionfactory, "gopher://localhost");
+            var browser = new Browser(connectionfactory, config);
 
             Assert.DoesNotThrow(() => browser.Draw(console));
 
@@ -54,12 +65,12 @@ namespace Gopher.Cli.Test
         [Test]
         public void Browser_RequestData_SetsDisplay()
         {
-            var connectionfactory = Substitute.For<IConnectionFactory>();
+            config.Homepage().Returns(new Uri("gopher://localhost"));
             var connection = Substitute.For<IConnection>();
             connectionfactory.CreateSimple().Returns(connection);
             var console = Substitute.For<IConsole>();
 
-            var browser = new Browser(connectionfactory, "gopher://localhost");
+            var browser = new Browser(connectionfactory, config);
 
             connection.Open(Arg.Any<string>(), Arg.Any<int>()).Returns(true);
             connection.Request(Arg.Any<string>()).Returns("0Test Display\tSelector Text\tDomain Info\t71");
@@ -74,10 +85,10 @@ namespace Gopher.Cli.Test
         [Test]
         public void Browser_InputEsc_NoContinue()
         {
-            var connectionfactory = Substitute.For<IConnectionFactory>();
+            config.Homepage().Returns(new Uri("gopher://localhost"));
             var console = Substitute.For<IConsole>();
 
-            var browser = new Browser(connectionfactory, "gopher://localhost");
+            var browser = new Browser(connectionfactory, config);
 
             console.ReadKey().Returns(new ConsoleKeyInfo('0', ConsoleKey.Escape, false, false, false));
 
@@ -89,10 +100,10 @@ namespace Gopher.Cli.Test
         [Test]
         public void Browser_Inputq_NoContinue()
         {
-            var connectionfactory = Substitute.For<IConnectionFactory>();
+            config.Homepage().Returns(new Uri("gopher://localhost"));
             var console = Substitute.For<IConsole>();
 
-            var browser = new Browser(connectionfactory, "gopher://localhost");
+            var browser = new Browser(connectionfactory, config);
 
             console.ReadKey().Returns(new ConsoleKeyInfo('q', ConsoleKey.Q, false, false, false));
 
@@ -104,10 +115,10 @@ namespace Gopher.Cli.Test
         [Test]
         public void Browser_InputOther_Continue()
         {
-            var connectionfactory = Substitute.For<IConnectionFactory>();
+            config.Homepage().Returns(new Uri("gopher://localhost"));
             var console = Substitute.For<IConsole>();
 
-            var browser = new Browser(connectionfactory, "gopher://localhost");
+            var browser = new Browser(connectionfactory, config);
 
             console.ReadKey().Returns(new ConsoleKeyInfo('a', ConsoleKey.A, false, false, false));
 
@@ -119,9 +130,9 @@ namespace Gopher.Cli.Test
         [Test]
         public void BrowserHistory_Constructor_IgnoresStart()
         {
-            var connectionfactory = Substitute.For<IConnectionFactory>();
+            config.Homepage().Returns(new Uri("gopher://localhost"));
 
-            var browser = new Browser(connectionfactory, "gopher://localhost");
+            var browser = new Browser(connectionfactory, config);
 
             Assert.IsEmpty(browser.History);
         }
@@ -129,9 +140,9 @@ namespace Gopher.Cli.Test
         [Test]
         public void BrowserHistory_StringRquest_AddsRequest()
         {
-            var connectionfactory = Substitute.For<IConnectionFactory>();
+            config.Homepage().Returns(new Uri("gopher://localhost"));
 
-            var browser = new Browser(connectionfactory, "gopher://localhost");
+            var browser = new Browser(connectionfactory, config);
             browser.Request("/");
 
             Assert.AreEqual(1, browser.History.Count);
@@ -141,9 +152,9 @@ namespace Gopher.Cli.Test
         [Test]
         public void BrowserHistory_ObjectRquest_AddsRequestUri()
         {
-            var connectionfactory = Substitute.For<IConnectionFactory>();
+            config.Homepage().Returns(new Uri("gopher://localhost"));
 
-            var browser = new Browser(connectionfactory, "gopher://localhost");
+            var browser = new Browser(connectionfactory, config);
             browser.Request(new Response("0Test Display\tSelector\texample.com\t"));
 
             Assert.AreEqual(1, browser.History.Count);
@@ -153,9 +164,9 @@ namespace Gopher.Cli.Test
         [Test]
         public void BrowserHistory_MultipleRquest_AddsAllRequestUri()
         {
-            var connectionfactory = Substitute.For<IConnectionFactory>();
+            config.Homepage().Returns(new Uri("gopher://localhost"));
 
-            var browser = new Browser(connectionfactory, "gopher://localhost");
+            var browser = new Browser(connectionfactory, config);
             browser.Request(new Response("0Test Display\tFirst\texample.com\t"));
             browser.Request(new Response("0Test Display\tSecond\texample.com\t"));
 
