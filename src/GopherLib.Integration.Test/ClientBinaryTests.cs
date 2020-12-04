@@ -14,6 +14,8 @@ namespace GopherLib.Integration.Test
     [ExcludeFromCodeCoverage]
     public class ClientBinaryTests
     {
+        private byte[] tcpResponse;
+
         private void RunServer(object serverObject)
         {
             var server = serverObject as TcpListener;
@@ -30,7 +32,6 @@ namespace GopherLib.Integration.Test
             stream.Read(read, 0, 1);
             stream.Flush();
 
-            var tcpResponse = new byte[] { 5, 4, 3, 2, 1 };
             stream.Write(tcpResponse);
 
             stream.Close();
@@ -39,20 +40,25 @@ namespace GopherLib.Integration.Test
         [Test]
         public void ClientBinary_WithServer_ReturnsData()
         {
-            var server = new TcpListener(IPAddress.Loopback, 70);
+            var rand = new Random();
+            const int size = 1024;
+            tcpResponse = new byte[size];
+            rand.NextBytes(tcpResponse);
+
+            var port = rand.Next(1024, 2048);
+
+            var server = new TcpListener(IPAddress.Loopback, port);
             var thread = new Thread(RunServer);
             thread.Start(server);
 
-            var client = new Client(new Uri("gopher://localhost"));
+            var client = new Client(new Uri($"gopher://localhost:{port}"));
             var tcpClient = new Simple(new TcpConnection());
 
             var result = client.Binary(tcpClient, "/data");
 
-            var expected = new byte[] { 5, 4, 3, 2, 1 };
-
             Assert.AreNotEqual(0, result.Length);
-            Assert.AreEqual(5, result.Length);
-            Assert.AreEqual(expected, result.ToArray());
+            Assert.AreEqual(size, result.Length);
+            Assert.AreEqual(tcpResponse, result.ToArray());
         }
     }
 }

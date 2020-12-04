@@ -1,5 +1,6 @@
 ﻿using GopherLib.Facade;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,7 +39,7 @@ namespace GopherLib.Connection
             var data = RequestBytes(path);
 
             var result = new string(Encoding.ASCII.GetChars(data.ToArray()));
-            
+
             return result;
         }
 
@@ -56,29 +57,23 @@ namespace GopherLib.Connection
 
             using var stream = client.GetStream();
 
+            // Send the request selector
             var pathBytes = Encoding.ASCII.GetBytes(path);
 
             stream.Write(pathBytes, 0, pathBytes.Length);
             stream.Flush();
 
             int chunk = 1024;
-
-            var buffer = new byte[chunk];
-            var data = new byte[chunk];
-            var temp = new byte[chunk];
-            var size = 0;
-            int loops = 1;
+            var buffer = new List<byte[]>();
             int read;
-
-            var end = new byte[3];
             var terminator = new byte[3] { (int)'\r', (int)'\n', (int)'.' };
+
             do
             {
+                var data = new byte[chunk];
                 try
                 {
-                    read = stream.Read(buffer, 0, chunk);
-                    buffer.CopyTo(data, size);
-                    size += read;
+                    read = stream.Read(data, 0, chunk);
                 }
                 catch   //Server closed stream etc.
                 {
@@ -87,32 +82,32 @@ namespace GopherLib.Connection
 
                 if (read > 0)
                 {
-                    temp = new byte[data.Length];
-                    data.CopyTo(temp, 0);
-
-                    data = new byte[data.Length + size];
-                    temp.CopyTo(data, 0);
+                    buffer.Add(data[0..read]);
                 }
 
                 // read enough to contain terminator sequence
-                if(read > 3)
+                if (read > 3 && Enumerable.SequenceEqual(data[(read - 3)..read], terminator))
                 {
-                    end = data[(read-3)..read];
-                    if(Enumerable.SequenceEqual(end, terminator))
-                    {
-                        break;
-                    }
+                    // fails if the terminator was sent over more than one chunk
+                    break;
                 }
-
-                if (loops++ % 5 == 0)
-                {
-                    chunk *= 2;
-                    buffer = new byte[chunk];
-                }
-
             } while (read != 0);
 
-            return data[0..size];
+            if (buffer.Count == 0)
+            {
+                return new Span<byte>();
+            }
+
+            var response = new byte[buffer.Sum(s => s.Length)];
+
+            var position = 0;
+            for (int i = 0; i < buffer.Count; i++)
+            {
+                buffer[i].CopyTo(response, position);
+                position += buffer[i].Length;
+            }
+
+            return response;
         }
 
         public Task<Memory<byte>> RequestBytesAsync(string path)
