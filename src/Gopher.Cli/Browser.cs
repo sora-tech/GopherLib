@@ -55,7 +55,6 @@ namespace Gopher.Cli
                 }
             }
 
-            History.Push(request);
 
             var client = new Client(Uri);
 
@@ -64,10 +63,12 @@ namespace Gopher.Cli
                 case ItemType.File:
                     var file = client.TextFile(connectionFactory.CreateSimple(), request.Selector);
                     this.display = new Document(file, Width, displayHeight);
+                    History.Push(request);
                     break;
                 case ItemType.Directory:
                     var response = client.Menu(connectionFactory.CreateSimple(), request.Selector);
                     this.display = new Scroller(response, Width, displayHeight);
+                    History.Push(request);
                     break;
                 case ItemType.IndexSearch:
                     var search = request.Selector.Split(" ");
@@ -94,6 +95,10 @@ namespace Gopher.Cli
                     if (request.Display.Contains(" "))
                     {
                         fileName = Path.Combine(downloadPath, request.Display.Split(" ")[0]);
+                    }
+                    if (File.Exists(fileName))
+                    {
+                        File.Delete(fileName);
                     }
                     File.WriteAllBytes(fileName, binary.ToArray());
                     break;
